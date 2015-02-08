@@ -1,0 +1,260 @@
+					// Begin the project directory
+
+					print "<h2>Project Directory</h2><table summary=\"Project Directory\">";
+
+					$proj_directory_count = 0;
+
+
+					if ($proj_tenant_1 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_tenant_1' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Tenant 1 (1.5)</td><td  >$contact_name</td></tr>";
+					    $proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_41 > 0) {
+						$sql_consult = "SELECT contact_id, contact_namefirst, contact_namesecond, contact_email, company_name, company_id FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_41' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$contact_id = $array_consult['contact_id'];
+						$company_name = $array_consult['company_name'];
+						$company_id = $array_consult['company_id'];
+						$contact_details = "<a href=\"index2.php?page=contacts_view_detailed&amp;contact_id=".$contact_id."\">".$contact_namefirst." ".$contact_namesecond."</a><br /><a href=\"index2.php?page=contacts_company_view&amp;company_id=".$company_id."\">".$company_name."</a>";
+						print "<tr><td>Planning Case Officer (4.1)</td><td>$contact_details</td></tr>";
+						$proj_directory_count++;
+					}
+
+
+					if ($proj_consult_42 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_42' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Building Control Officer (4.2)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_43 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_43' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Party Wall Surveyor (4.3)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_6 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_6' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Project Manager (6.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_7 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_7' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Planning Supervisor (7.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_8 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_8' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Planning Consultant (8.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_9 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_9' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Cost Consultant (9.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_10 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_10' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Structural Engineer (10.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_11 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_11' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Mechanical Engineer (11.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_12 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_12' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td>Electrical Engineer (12.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_13 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_13' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td>Highways Consultant (13.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_14 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_14' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Fire Consultant (14.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_15 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_15' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Environmental Consultant (15.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_16 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_16' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Acoustic Consultant (16.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_17 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_17' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Residential Consultant (17.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_18 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_18' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Construction Consultant (18.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_consult_19 > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_consult_19' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Landscape Consultant (19.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_conc > 0) {
+						$sql_consult = "SELECT contact_namefirst, contact_namesecond, contact_email, company_name FROM contacts_contactlist, contacts_companylist where contact_company = company_id AND contact_id = '$proj_conc' LIMIT 1";
+						$result_consult = mysql_query($sql_consult, $conn);
+						$array_consult = mysql_fetch_array($result_consult);
+						$contact_namefirst = $array_consult['contact_namefirst'];
+						$contact_namesecond = $array_consult['contact_namesecond'];
+						$contact_email = $array_consult['contact_email'];
+						$company_name = $array_consult['company_name'];
+						if (strlen($contact_email) > 3) { $contact_name = "<a href=mailto:$contact_email>".$contact_namefirst." ".$contact_namesecond."</a><br />".$company_name; } else { $contact_name = $contact_namefirst." ".$contact_namesecond."<br />".$company_name; }
+						print "<tr><td  >Main Contractor (30.0)</td><td  >$contact_name</td></tr>";
+						$proj_directory_count = $proj_directory_count + 1;
+					}
+
+					if ($proj_directory_count < 1) { print "<tr><td>No records found</td></tr>"; }
+
+					print "</table>";

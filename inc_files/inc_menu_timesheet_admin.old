@@ -1,0 +1,37 @@
+<?php
+
+// Timesheet Settings & Analysis
+
+print "<h1 class=\"heading_side\">Timesheet Administration</h1>";
+print "<ul class=\"button_left\">";
+if ($user_usertype_current > 2) { print "<li><a href=\"index2.php?page=timesheet_analysis\">Analysis Sheets</a></li>"; }
+if ($user_usertype_current > 4) { print "<li><a href=\"index2.php?page=timesheet_settings\">Timesheet Settings</a></li>"; }	}
+
+
+
+if ($user_usertype_current > 3) {
+	print "<li><a href=\"index2.php?page=timesheet_rates\">Hourly Rates</a></li>";
+	if (substr($_GET[page],0,15) == "timesheet_rates") {
+		print "<li><a href=\"index2.php?page=timesheet_rates_hourly\">Hourly Rates</a></li>";
+		print "<li><a href=\"index2.php?page=timesheet_rates_overhead\">Overhead Rates</a></li>";
+		print "<li><a href=\"index2.php?page=timesheet_rates_project\">Project Rates</a></li>";
+	}
+}
+
+	print "</ul>";
+
+if ($user_usertype_current > 2) {
+	print "<h1 class=\"heading_side\">Invoice Administration</h1>";
+	print "<ul class=\"button_left\">";
+	print "<li><a href=\"index2.php?page=timesheet_invoice\">Invoices</a></li>";
+		if (substr($_GET[page],0,17) == "timesheet_invoice") {
+			print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_invoice_edit\">Add Invoice</a></li>";
+			print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_invoice_view_outstanding\">Oustanding Invoices</a></li>";
+		}
+}
+
+print "</ul>";
+
+
+		
+?>

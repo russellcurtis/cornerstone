@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+ <ShortName>RCKa Intranet System</ShortName>
+ <Description>Search RCKa Intranet</Description>
+ <Tags>rcka intranet</Tags>
+ <Url type="text/html"
+      template="http://home/rcka_intranet/index2.php?page=search&amp;keywords={searchTerms}"/>
+</OpenSearchDescription>

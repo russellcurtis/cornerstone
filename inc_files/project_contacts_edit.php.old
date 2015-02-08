@@ -1,0 +1,132 @@
+echo "<h2>Old Project Contacts (Obsolete - do not edit)</h2>";
+
+// Tenant 1
+	$check_disc = 15;
+	print "<p>Tenant 1 (1.5)<br />";
+	include("inc_files/inc_data_contacts_dropdown_15.php");
+	print "</p>";
+
+// Planning Case Officer
+	$check_disc = 41;
+	$check_consult = 3;
+	print "<p>Planning Case Officer (4.1)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Building Control Officer
+	$check_disc = 42;
+	$check_consult = 20;
+	print "<p>Building Control Officer (4.2)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Party Wall Surveyor
+	$check_disc = 43;
+	$check_consult = 28;
+	print "<p>Party Wall Surveyor (4.3)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Project Manager
+	$check_disc = 6;
+	$check_consult = 13;
+	print "<p>Project Manager (6.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Planning Supervisor
+	$check_disc = 7;
+	$check_consult = 14;
+	print "<p>Planning Supervisor (7.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Planning Consultant
+	$check_disc = 8;
+	$check_consult = 19;
+	print "<p>Planning Consultant (8.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Cost Consultant
+	$check_disc = 9;
+	$check_consult = 8;
+	print "<p>Cost Consultant (9.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Structural Engineer
+	$check_disc = 10;
+	$check_consult = 1;
+	print "<p>Structural Engineer (10.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Mechanical Engineer
+	$check_disc = 11;
+	$check_consult = 7;
+	print "<p>Mechanical Engineer (11.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Electrical Engineer
+	$check_disc = 12;
+	$check_consult = 7;
+	print "<p>Electrical Engineer (12.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Highways Engineer
+	$check_disc = 13;
+	$check_consult = 15;
+	print "<p>Highways Engineer (13.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Fire Engineer
+	$check_disc = 14;
+	$check_consult = 16;
+	print "<p>Fire Engineer (14.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Environmental Engineer
+	$check_disc = 15;
+	$check_consult = 24;
+	print "<p>Environmental Engineer (15.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Acoustic Engineer
+	$check_disc = 16;
+	$check_consult = 25;
+	print "<p>Acoustic Engineer (16.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Residential Consultant
+	$check_disc = 17;
+	$check_consult = 26;
+	print "<p>Residential Consultant (17.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Construction Consultant
+	$check_disc = 18;
+	$check_consult = 27;
+	print "<p>Construction Consultant (18.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Landscape Consultant
+	$check_disc = 19;
+	$check_consult = 22;
+	print "<p>Landscape Consultant (19.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_10.php");
+	print "</p>";
+
+// Main Contractor
+	$check_consult = 9;
+	print "<p>Main Contractor (30.0)<br />";
+	include("inc_files/inc_data_contacts_dropdown_30.php");
+	print "</p>";

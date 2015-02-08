@@ -1,0 +1,42 @@
+<?php
+
+// Timesheet Settings & Analysis
+
+print "<h1 class=\"heading_side\">Timesheet Administration</h1>";
+print "<ul class=\"button_left\">";
+if ($user_usertype_current > 2) { print "<li><a href=\"index2.php?page=timesheet_analysis\">Analysis Sheets</a></li>"; }
+if ($user_usertype_current > 3) { print "<li><a href=\"index2.php?page=timesheet_settings\">Timesheet Settings</a></li>"; }
+if ($user_usertype_current > 3) { print "<li><a href=\"index2.php?page=timesheet_rates_hourly\">Hourly Rates</a></li>"; }
+if ($user_usertype_current > 3) { print "<li><a href=\"index2.php?page=timesheet_rates_overhead\">Overhead Rates</a></li>"; }
+if ($user_usertype_current > 3) { print "<li><a href=\"index2.php?page=timesheet_rates_project\">Project Rates</a></li>"; }
+print "</ul>";
+
+// Expenses
+
+print "<h1 class=\"heading_side\">Fees</h1>";
+print "<ul class=\"button_left\">";
+print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_expense_edit\">Add Expenses</a></li>";
+if ($user_usertype_current > 3) { print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_fees_edit\">Add Fees</a></li>"; }	
+if ($user_usertype_current > 2) { print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_fees_view\">View Fees</a></li>"; }			
+print "</ul>";
+
+// Invoices
+
+print "<h1 class=\"heading_side\">Invoices</h1>";
+print "<ul class=\"button_left\">";
+if ($user_usertype_current > 2) { print "<li><a href=\"index2.php?page=timesheet_invoice\">Invoices</a></li>"; }	
+if ($user_usertype_current > 2) { print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_invoice_edit\">Add Invoice</a></li>"; }
+if ($user_usertype_current > 2) { print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_invoice_items_edit\">Add Invoice Items</a></li>"; }
+if ($user_usertype_current > 2) { print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_invoice_view_paid\">Paid Invoices</a></li>"; }
+if ($user_usertype_current > 2) { print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_invoice_view_outstanding\">Oustanding Invoices</a></li>"; }		
+print "</ul>";
+
+// Expenses
+
+print "<h1 class=\"heading_side\">Expenses</h1>";
+print "<ul class=\"button_left\">";
+print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_expense_edit\">Add Expenses</a></li>";
+if ($user_usertype_current > 3) { print "<li class=\"button_left_sub\"><a href=\"index2.php?page=timesheet_expense_list\">Validate Expenses</a></li>"; }			
+print "</ul>";
+		
+?>
