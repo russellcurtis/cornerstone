@@ -24,6 +24,7 @@ else { $user_id = ""; }
 	user_user_timesheet = '$_POST[user_user_timesheet]',
 	user_holidays = '$_POST[user_holidays]',
 	user_initials = '$_POST[user_initials]',
+	user_prop_target = '$_POST[user_prop_target]',
 	user_user_timesheet = '$_POST[user_user_timesheet]'
 	WHERE user_id = '$user_id' LIMIT 1";
 	

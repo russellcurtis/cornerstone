@@ -11,7 +11,7 @@ if ($_POST[action] == "edit") {
 		$project_num = CleanUp($_POST[project_num]);
 		$project_title = CleanUp($_POST[project_title]);
 		$project_location = CleanUp($_POST[project_location]);
-		$project_desc = $_POST[project_desc];
+		$project_desc = addslashes ( $_POST[project_desc] );
 		$project_type = CleanUp($_POST[project_type]);
 		$project_date = CleanUp($_POST[project_date]);
 		$project_keyword = CleanUp($_POST[project_keyword]);

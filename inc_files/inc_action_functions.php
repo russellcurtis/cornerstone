@@ -151,10 +151,27 @@ function NumberFormat($input) {
 
 function BeginWeek($input) {
 	$dayofweek = date("w", $input);
-	$daysofweek = (($dayofweek) * 86400 ) - 7200 - 86400;
+	if ($dayofweek == 1) { $dayofweek = 0; }
+	elseif ($dayofweek == 2) { $dayofweek = 1; }
+	elseif ($dayofweek == 3) { $dayofweek = 2; }
+	elseif ($dayofweek == 4) { $dayofweek = 3; }
+	elseif ($dayofweek == 5) { $dayofweek = 4; }
+	elseif ($dayofweek == 6) { $dayofweek = 5; }
+	elseif ($dayofweek == 0) { $dayofweek = 6; }
+	$daysofweek = (($dayofweek) * 86400 ) - 7200;
 	$today = mktime(0, 0, 0, date("n", $input), date("j", $input), date("Y", $input));
 	$monday = ( $today - $daysofweek );
 	return($monday);
+}
+
+function BeginMonth($time,$week,$backwards) {
+	//"backwards" means how many weeks to go back - assume none
+	if ($backwards > 0) { $time = $time - ($backwards * 604800); } 
+	$month = date("n", $time);
+	$year = date("Y", $time);
+	$firstday = mktime(12,0,0,$month,1,$year);
+	if ($week != NULL) { $firstday = BeginWeek($firstday); }
+	return($firstday);
 }
 
 function TextPresent($input) {
@@ -563,12 +580,21 @@ function TextAreaEdit_OLD() {
 
 function TextAreaEdit() {
 
-				echo "	<script src=\"tiny_mce/tinymce.min.js\"></script>
-						<script>tinymce.init({
-						selector:'textarea',
-						menubar: false,
-						valid_elements : \"a,p,i,strong,ul,li,img\"
-						});</script>";
+				echo "<script src=\"//tinymce.cachefly.net/4.1/tinymce.min.js\"></script>
+					<script type=\"text/javascript\">
+					tinymce.init({
+					selector: \"textarea\",
+					plugins: [
+						\"advlist autolink lists link image charmap print preview anchor\"
+					],
+					menubar: false,
+					toolbar: \"undo redo | bold italic underline strikethrough | bullist numlist outdent indent | link unlink | image \",
+					autosave_ask_before_unload: false,
+					max_height: 200,
+					min_height: 160,
+					height : 180
+				});
+				</script>";
 
 }
 

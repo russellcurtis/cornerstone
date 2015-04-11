@@ -5,9 +5,9 @@ padding: 6px;
 margin-left: auto;
 margin-right: auto;
 width: 98%;
-background: #eee;
-font-family:  Georgia,helvetica,san-serif;
-font-size: 10pt;
+background: #fff;
+font-family:  Arial,helvetica,san-serif;
+font-size: 1.0em;
 color: #000;
 }
 
@@ -28,7 +28,7 @@ width: 100%;
 #maintitle {
 overflow: hidden;
 width: 100%;
-font-family:  Georgia,helvetica,san-serif;
+font-family:  Arial,helvetica,san-serif;
 padding: 6px;
 font-size: 20pt;
 
@@ -132,7 +132,7 @@ background-color: #fff;
 
 p {
 padding-left: 5px;
-margin: 4px 2px 4px 2px;
+margin: 2px 2px 2px 2px;
 }
 
 
@@ -252,7 +252,6 @@ list-style-position:outside;
 text-indent: 0;
 background-color: #f0f0f0; 
 overflow: hidden;
-font-family:  Georgia,helvetica,san-serif;
 padding: 2px 2px 2px 2px;
 margin: 2px;
 }

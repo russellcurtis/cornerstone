@@ -71,12 +71,12 @@ print "<a href=\"#\" onclick=\"itemSwitch(1); return false;\" class=\"menu_tab\"
 print "<a href=\"#\" onclick=\"itemSwitch(2); return false;\" class=\"menu_tab\">Client</a>";
 print "<a href=\"#\" onclick=\"itemSwitch(4); return false;\" class=\"menu_tab\">Contacts</a>";
 print "<a href=\"#\" onclick=\"itemSwitch(8); return false;\" class=\"menu_tab\">Tasks</a>";
-if ($user_usertype_current > 3) {
+if ($user_usertype_current > 2) {
 	print "<a href=\"#\" onclick=\"itemSwitch(5); return false;\" class=\"menu_tab\">Fees</a>";
 }
 if ($user_usertype_current >= 4) {
 	print "<a href=\"#\" onclick=\"itemSwitch(6); return false;\" class=\"menu_tab\">Expenses</a>";
-if ( $module_invoices == 1) { print "<a href=\"#\" onclick=\"itemSwitch(7); return false;\" class=\"menu_tab\">Invoices</a>"; }
+	print "<a href=\"#\" onclick=\"itemSwitch(7); return false;\" class=\"menu_tab\">Invoices</a>";
 	print "<a href=\"#\" onclick=\"itemSwitch(9); return false;\" class=\"menu_tab\">Website</a>";
 }
 
@@ -100,9 +100,6 @@ print "<p class=\"submenu_bar\">";
 	}
 	if ($user_usertype_current > 1) {
 		print "<a href=\"index2.php?page=drawings_list&amp;proj_id=$proj_id\" class=\"submenu_bar\">View Drawings</a>";
-	}
-	if ($user_usertype_current > 1) {
-		print "<a href=\"index2.php?page=project_checklist&amp;proj_id=$proj_id\" class=\"submenu_bar\">Project Checklist</a>";
 	}
 	
 print "</p>";

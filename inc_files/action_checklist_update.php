@@ -24,9 +24,9 @@ while ($counter < count($array_item_id)) {
 	$checklist_date = $array_checklist_date[$counter];
 	$checklist_timestamp = $array_checklist_timestamp[$counter];
 	$checklist_project = $array_checklist_project[$counter];
-	$checklist_comment = $array_checklist_comment[$counter];
+	$checklist_comment = addslashes ( $array_checklist_comment[$counter] );
 	$checklist_user = $array_checklist_user[$counter];
-	$checklist_link = $array_checklist_link[$counter];
+	$checklist_link = addslashes ( $array_checklist_link[$counter] );
 	
 	if ($checklist_id == NULL) { $checklist_id = "0"; }
 
@@ -48,7 +48,7 @@ while ($counter < count($array_item_id)) {
 				checklist_comment = '$checklist_comment',
 				checklist_user = '$checklist_user',
 				checklist_link = '$checklist_link'
-				WHERE checklist_item = $item_id AND checklist_project = $checklist_project
+				WHERE checklist_id = $checklist_id AND checklist_project = $checklist_project
 				LIMIT 1";
 			
 				

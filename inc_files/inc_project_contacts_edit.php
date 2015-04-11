@@ -25,7 +25,7 @@ echo "<table><tr><td colspan=\"2\">Contact Name</td></tr>";
 $sql_contact = "SELECT contact_id, contact_namefirst, contact_namesecond, contact_company, company_name, company_postcode, company_id FROM contacts_contactlist LEFT JOIN contacts_companylist ON contacts_contactlist.contact_company = contacts_companylist.company_id ORDER BY contact_namesecond, contact_namefirst";
 
 $result_contact = mysql_query($sql_contact, $conn) or die(mysql_error());
-print "<tr><td colspan=\"2\"><select name=\"contacts_id\">";
+print "<tr><td colspan=\"2\"><select name=\"contact_proj_contact\">";
 
 	while ($array_contact = mysql_fetch_array($result_contact)) {
 
@@ -37,15 +37,15 @@ print "<tr><td colspan=\"2\"><select name=\"contacts_id\">";
 		$company_name = $array_contact['company_name'];
 		$company_postcode = $array_contact['company_postcode'];
 		
-		$name_print = $contact_namesecond.", ".$contact_namefirst." - ";
+		$name_print = $contact_namesecond.", ".$contact_namefirst;
 
 		//$name_print = NULL;
 		// if (str_len($contact_namesecond) > 0) { $name_print = $contact_namesecond; }
 		// if (str_len($contact_namefirst) > 0) { $name_print = $name_print.", ".$contact_namefirst; }
 		
-		if ($_GET[contact_proj_id] == NULL AND $company_id > 0) { $print_company = $company_name." [".$company_postcode."]"; } else { $print_company = NULL; }
+		if ($_GET[contact_proj_id] == NULL AND $company_id > 0) { $print_company = "- " . $company_name." [".$company_postcode."]"; } else { $print_company = NULL; }
 		if ($contact_proj_contact == $contact_id) { $selected = "selected=\"selected\""; $project_company = $company_id; } else { $selected = NULL; }
-		echo "<option value=\"$contact_id\" $selected>$name_print$print_company</option>\n";
+		echo "<option value=\"$contact_id\" $selected>$name_print $print_company</option>\n";
 }
 
 echo "</select>";

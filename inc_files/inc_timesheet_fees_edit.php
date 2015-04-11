@@ -15,9 +15,14 @@ if ($ts_fee_id != NULL) {
 		$ts_fee_project = $array['ts_fee_project'];
 		$ts_fee_percentage = $array['ts_fee_percentage'];
 		$ts_fee_pre = $array['ts_fee_pre'];
+		$ts_fee_pre_lag = round (($array['ts_fee_pre_lag'] / 604800),0);
+		$ts_fee_commence = $array['ts_fee_commence'];
 		$ts_fee_prospect = $array['ts_fee_prospect'];	
 		$ts_fee_target = $array['ts_fee_target'];		
 		$ts_fee_comment = $array['ts_fee_comment'];
+		
+		$ts_datum_commence = $array['ts_datum_commence'];
+		$ts_datum_length = $array['ts_datum_length'];
 		
 		print "<h1>Edit Fee Stage</h1>";
 		// print "<p class=\"menu_bar\">Menu goes here</p>";
@@ -34,6 +39,7 @@ if ($ts_fee_id != NULL) {
 		$ts_fee_prospect = CleanNumber($_POST[ts_fee_prospect]);
 		$ts_fee_target = CleanNumber($_POST[ts_fee_target]);
 		$ts_fee_comment = CleanUp($_POST[ts_fee_comment]);
+		$ts_fee_commence = CleanUp($_POST[ts_fee_commence]);
 		
 		if ($_GET[proj_id] != NULL) { $proj_id_page = $_GET[proj_id]; }
 		
@@ -72,6 +78,7 @@ print "<p><select name=\"ts_fee_project\">";
 	while ($array = mysql_fetch_array($result)) {
 	$proj_num = $array['proj_num'];
 	$proj_name = $array['proj_name'];
+	$proj_active = $array['proj_active'];
 	$proj_id = $array['proj_id'];
 	print "<option value=\"$proj_id\"";
 		if ($proj_id == $ts_fee_project_selected) { print " selected=\"selected\""; }
@@ -118,10 +125,10 @@ print "<fieldset><legend>Details</legend><p>";
 	elseif ($ts_fee_prospect == 50) { $neutral = "checked=\"checked\""; }
 	elseif ($ts_fee_prospect == 75) { $probable = "checked=\"checked\""; }
 	elseif($ts_fee_prospect == 100) { $definite = "checked=\"checked\""; }
-	elseif($ts_fee_prospect == 12.5) { $potential = "checked=\"checked\""; }
+	elseif($ts_fee_prospect == 10) { $potential = "checked=\"checked\""; }
 	else { $neutral = "checked=\"checked\""; } 
 	
-	echo "<input type=\"radio\" value=\"12.5\" name=\"ts_fee_prospect\" $potential />&nbsp;Possible&nbsp;";
+	echo "<input type=\"radio\" value=\"10\" name=\"ts_fee_prospect\" $potential />&nbsp;Unlikely&nbsp;";
 	echo "<input type=\"radio\" value=\"25\" name=\"ts_fee_prospect\" $possible />&nbsp;Possible&nbsp;";
 	echo "<input type=\"radio\" value=\"50\" name=\"ts_fee_prospect\" $neutral />&nbsp;Neutral&nbsp;";
 	echo "<input type=\"radio\" value=\"75\" name=\"ts_fee_prospect\" $probable />&nbsp;Probable&nbsp;";
@@ -183,7 +190,7 @@ print "<fieldset><legend>Details</legend><p>";
 
 $sql5 = "SELECT * FROM intranet_timesheet_fees WHERE ts_fee_project = '$ts_fee_project' AND ts_fee_id != '$ts_fee_id' ORDER BY ts_fee_time_begin";
 $result5 = mysql_query($sql5, $conn) or die(mysql_error());
-print "<option value=\"\">-- Project Start Date --</option>";
+print "<option value=\"\">-- Fixed Date (Below) --</option>";
 while ($array5 = mysql_fetch_array($result5)) {
 	$ts_fee_text = $array5['ts_fee_text'];
 	$ts_fee_id_loop = $array5['ts_fee_id'];
@@ -201,9 +208,17 @@ while ($array5 = mysql_fetch_array($result5)) {
 
 print "</select>";
 
+echo "<p><input type=\"number\" value=\"$ts_fee_pre_lag\" name=\"ts_fee_pre_lag\" />&nbsp;Enter lag (+/-) in weeks from previous stage.</p>";
+
+// Date for start of stage if none entered
+
+echo "<h3>Date of fee stage commencement</h3>";
+
+echo "<p><input type=\"date\" name=\"ts_fee_commence\" value=\"$ts_fee_commence\" /></p>";
+
 echo "</fieldset>";
 
-if ($ts_fee_id != "") {
+if ($ts_fee_id != "" && $proj_active == 1) {
 
 		echo "<fieldset><legend>Change Project</legend><p>You can move this fee stage to another project here:</p>";
 
@@ -212,6 +227,24 @@ if ($ts_fee_id != "") {
 		include_once("dropdowns/inc_data_dropdown_projects.php");
 
 } else { echo "<input type=\"hidden\" name=\"ts_fee_project\" value=\"$ts_fee_project\" />"; }
+
+
+echo "</fieldset>";
+
+if ($ts_fee_id > 0) {
+
+	echo "<fieldset><legend>Datum</legend>";
+	
+	if ($ts_datum_commence != NULL) {	
+	echo "<p>Current Datum: " . TimeFormat ( AssessDays($ts_datum_commence) ) . " to " . TimeFormat ( AssessDays($ts_datum_commence) + $ts_datum_length ) . "</p>";
+	}
+
+	if ($ts_datum_commence == NULL) { $checked = " checked=\"checked\" "; } else { unset($checked); }
+	echo "<p><input type=\"checkbox\" value=\"1\" name=\"datum\" $checked />&nbsp;Reset the datum to these new dates?</p>";
+
+	echo "</fieldset>";
+
+}
 	
 
 	// Close the table

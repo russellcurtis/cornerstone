@@ -31,29 +31,21 @@ print "</p>";
 
 print "<h2>Project Fee Stages</h2>";
 
-$sql = "SELECT * FROM intranet_timesheet_fees, intranet_projects WHERE ts_fee_project = '$proj_id' AND proj_id = ts_fee_project ORDER BY ts_fee_text, ts_fee_time_begin";
+$sql = "SELECT * FROM intranet_timesheet_fees, intranet_projects WHERE ts_fee_project = '$proj_id' AND proj_id = ts_fee_project ORDER BY ts_fee_commence, ts_fee_text";
 $result = mysql_query($sql, $conn) or die(mysql_error());
 
 
 		if (mysql_num_rows($result) > 0) {
 		
-		$sql_projstart = "SELECT proj_date_start FROM intranet_projects WHERE proj_id = '$proj_id' LIMIT 1";
-		$result_projstart = mysql_query($sql_projstart, $conn) or die(mysql_error());
-		$array_projstart = mysql_fetch_array($result_projstart);
-		$proj_date_commence = $array_projstart['proj_date_start'];
-
 		print "<table summary=\"Lists the fees for the selected project\">";
 		
 		echo "<form method=\"post\" action=\"index2.php?page=project_fees&amp;proj_id=$proj_id\">";
 		
-		print "<tr><th colspan=\"2\">Stage</th><th>Begin Date</th><th><strong>End Date</th><th";
+		print "<tr><th colspan=\"2\">Stage</th><th>Begin Date</th><th>End Date</th><th";
 		if ($user_usertype_current > 2) { print " colspan=\"3\""; }
 		print ">Fee for Stage</th></tr>";
 		
-		if ($proj_date_commence > 0) {
-			print "<tr><td colspan=\"7\">Project Start: <a href=\"index2.php?page=datebook_view_day&amp;time=$proj_date_commence\">".TimeFormat($proj_date_commence)."</a></td></tr>";
-		} else { $proj_date_commence = time(); echo "<tr><td colspan=\"7\">Assuming start date: <a href=\"index2.php?page=datebook_view_day&amp;time=$proj_date_commence\">".TimeFormat($proj_date_commence)."</a> (today)</td></tr>"; }
-		
+
 		$fee_total = 0;
 		$invoice_total = 0;
 		$counter = 0;
@@ -70,6 +62,7 @@ $result = mysql_query($sql, $conn) or die(mysql_error());
 								$ts_fee_value = $array['ts_fee_value'];
 								$ts_fee_text = $array['ts_fee_text'];
 								$ts_fee_comment = $array['ts_fee_comment'];
+								$ts_fee_commence = $array['ts_fee_commence'];
 								$ts_fee_percentage = $array['ts_fee_percentage'];
 								$ts_fee_invoice = $array['ts_fee_invoice'];
 								$ts_fee_project = $array['ts_fee_project'];
@@ -111,11 +104,27 @@ $result = mysql_query($sql, $conn) or die(mysql_error());
 								//  This bit needs re-writing to cross out any completed stages	
 								// if ($proj_riba > $riba_order) { $highlight = $highlight."text-decoration: line-through;"; }
 								
+								$prog_begin = AssessDays ($ts_fee_commence);
+								if ($prog_begin > 0) { $prog_end = $prog_begin + $ts_fee_time_end; } else { $prog_begin = time(); }
+								
+								// Calculate the time we are through the stage
+										if (time() > $prog_begin && time() < $prog_end) {
+										
+											$percent_complete = time() - $prog_begin;
+											$percent_complete = $percent_complete / $ts_fee_time_end;
+										
+										}
+										elseif (time() > $prog_end) { $percent_complete = 1; }
+										else { $percent_complete = 0; }
+										$percent_complete = $percent_complete * 100;
+										
+										$percent_complete = round ($percent_complete,0);
+								
 								if ($prog_begin > 0) { $prog_begin_print = "<a href=\"index2.php?page=datebook_view_day&amp;time=$prog_begin\">".TimeFormat($prog_begin)."</a>"; } else { $prog_begin_print = "-"; }
 								if ($prog_end > 0) { $prog_end_print = "<a href=\"index2.php?page=datebook_view_day&amp;time=$prog_end\">".TimeFormat($prog_end)."</a>"; } else { $prog_end_print = "-"; }
 								
 								$proj_duration = $prog_end - $prog_begin;
-								if ($proj_duration > 0) { $proj_duration_print = round($proj_duration / 604800)." weeks"; } else { $proj_duration_print = " - "; }
+								if ($proj_duration > 0) { $proj_duration_print = round($proj_duration / 604800)." weeks<br />(" . $percent_complete . "%)"; } else { $proj_duration_print = " - "; }
 								
 								if ($ts_fee_id == $proj_riba) { $ts_fee_id_selected = " checked=\"checked\""; } else { unset($ts_fee_id_selected); }
 								
@@ -164,6 +173,47 @@ $result = mysql_query($sql, $conn) or die(mysql_error());
 		echo "</form>";
 		
 		print "</table>";
+		
+		$sql = "SELECT ts_fee_id, ts_fee_text FROM intranet_timesheet_fees WHERE ts_fee_project = $proj_id ORDER BY ts_fee_text, ts_fee_time_begin";
+		$result = mysql_query($sql, $conn) or die(mysql_error());
+		
+		$sql_count = "SELECT ts_project FROM intranet_timesheet WHERE ts_project = $proj_id AND ts_stage_fee = 0";
+		$result_count = mysql_query($sql_count, $conn) or die(mysql_error());
+		$null_rows = mysql_num_rows($result_count);
+		
+		
+		if ($user_usertype_current > 3 && mysql_num_rows($result) > 0 && $null_rows > 0) { 
+		
+					echo "<fieldset><legend>Reconcile Unassigned Hours</legend>";
+					
+							echo "<p>Move all unassigned hours ($null_rows entries) to this fee stage:</p>";
+							
+							echo "<form action=\"index2.php?page=project_fees&amp;proj_id=$proj_id\" method=\"post\">";
+							echo "<input type=\"hidden\" name=\"action\" value=\"fee_move_unassigned\" />";
+							
+							echo "<select name=\"ts_fee_id\">";
+							
+							while ($array = mysql_fetch_array($result)) {
+								
+								$ts_fee_id = $array['ts_fee_id'];
+								$ts_fee_text = $array['ts_fee_text'];
+								
+								if ($proj_riba == $ts_fee_id) { $selected = "selected = \"selected\""; } else { unset($selected); }
+								
+								echo "<option value=\"$ts_fee_id\" $selected>$ts_fee_text</option>";
+								
+							
+							}
+							
+							echo "</select>";
+							echo "<p><input type=\"hidden\" name=\"proj_id\" value=\"$proj_id\" />";
+							echo "<input type=\"submit\"  onclick=\"return confirm('Are you sure you want to move all unallocated hours to this fee stage?')\"></p>";
+							
+							echo "</form>";
+					
+					echo "</fieldset>";
+		
+		}
 		
 } else {
 

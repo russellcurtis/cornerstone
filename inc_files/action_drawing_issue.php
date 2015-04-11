@@ -16,7 +16,7 @@ $issue_date = mktime ( $issue_date_hour, $issue_date_minute, $issue_date_second,
 $issue_set = time();
 
 
-if ($issue_reason == NULL) { $issue_reason = CleanUp($_POST[issue_revision_other]); }
+
 
 
 $total = 0;
@@ -34,6 +34,8 @@ $issue_method = $_POST['issue_method'];
 $issue_format = $_POST['issue_format'];
 $issue_comment = $_POST['issue_comment'];
 $issue_project = $_POST['issue_project'];
+
+if ($_POST[issue_reason] == NULL) { $issue_reason = CleanUp($_POST[issue_revision_other]); } else { $issue_reason = $_POST[issue_reason]; }
 
 $issue_timestamp = time();
 

@@ -40,6 +40,7 @@ print "<li><a href=\"popup_timesheet.php\">Timesheets (Full Screen)</a></li>";
 if ($user_usertype_current > 3) { 
 print "<li><span class=\"minitext\"><a href=\"index2.php?page=timesheet_analysis\">Timesheet Analysis</a></span></li>";
 print "<li><span class=\"minitext\"><a href=\"pdf_timesheet_analysis.php\">Project Analysis (PDF)</a></span></li>";
+print "<li><span class=\"minitext\"><a href=\"pdf_resourcing.php\">Resourcing Analysis (PDF)</a></span></li>";
 }
 echo "<li><span class=\"minitext\"><a href=\"pdf_timesheet_personal.php\">My Timesheets (PDF)</a></span></li>";
 //echo "<li><span class=\"minitext\"><a href=\"index2.php?page=holiday_request\">Holiday Request</a></span></li>";

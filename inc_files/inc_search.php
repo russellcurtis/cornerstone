@@ -93,6 +93,28 @@ $result = mysql_query($sql, $conn) or die(mysql_error());
 	}
 }
 
+// QMS
+
+print "<tr><td colspan=\"2\"><strong>Quality Management System</strong></td></tr>";
+
+$sql = "SELECT * FROM intranet_qms WHERE " . SearchTerms($keywords_array, "qms_text") . "ORDER BY qms_toc1, qms_toc2, qms_toc3, qms_toc4";
+$result = mysql_query($sql, $conn) or die(mysql_error());
+
+	if (mysql_num_rows($result) == 0) {
+		echo "<tr><td colspan=\"2\">No results found for QMS</td></tr>";
+	} else {
+			while ($array = mysql_fetch_array($result)) {
+			$qms_id = $array['qms_id'];
+			$qms_text = $array['qms_text'];
+			$qms_toc1 = $array['qms_toc1'];
+			$qms_toc2 = $array['qms_toc2'];
+			$qms_toc3 = $array['qms_toc3'];
+			$qms_toc4 = $array['qms_toc4'];
+
+			echo "<tr><td>$qms_toc1.$qms_toc2.$qms_toc3.$qms_toc4</td><td><a href=\"index2.php?page=qms_view&amp;s1=$qms_toc1&amp;s2=$qms_toc2&amp;qms_id=$qms_id#$qms_id\">$qms_text</a></td></tr>";
+	}
+}
+
 // Tasks
 
 print "<tr><td colspan=\"2\"><strong>Tasks</strong></td></tr>";

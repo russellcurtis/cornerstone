@@ -1,5 +1,7 @@
 <?php
 
+if ($_GET[proj_id] != NULL) { $proj_id = intval($_GET[proj_id]); }
+
 if ($proj_id != NULL) {
 
 echo "<h1 class=\"heading_side\">Drawing Actions</h1>";
@@ -24,6 +26,8 @@ if ($_GET[proj_id] != NULL) {
 	echo "<ul class=\"button_left\">";
 	
 	$sql_issue_list = "SELECT set_id, set_date, set_reason FROM intranet_drawings_issued_set WHERE set_project = $proj_id order by set_date DESC, set_timestamp DESC LIMIT 20";
+	
+	//echo "<p>$sql_issue_list</p>";
 	$result_issue_list = mysql_query($sql_issue_list, $conn) or die(mysql_error());
 		while ($array_issue_list = mysql_fetch_array($result_issue_list)) {
 			$set_id = $array_issue_list['set_id'];

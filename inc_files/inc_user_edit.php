@@ -31,6 +31,7 @@ if ($user_id != NULL) {
 	$user_user_timesheet = $array['user_user_timesheet'];
 	$user_holidays = $array['user_holidays'];
 	$user_initials = $array['user_initials'];
+	$user_prop_target = $array['user_prop_target'];
 	
 	echo "<h2>$user_name_first&nbsp;$user_name_second</h2>";
 	
@@ -77,11 +78,20 @@ if ($user_id != NULL) {
 		echo "<p><input type=\"checkbox\" name=\"user_active\" value=\"1\"";
 		if ($user_active == 1) { echo "checked=checked "; }
 		echo "/>&nbsp;User Active</p>";
-		echo "<p>Holiday Allowance<br /><input type=\"text\" name=\"user_holiday\" value=\"$user_holidays\" maxlength=\"6\" size=\"32\" /></p>";
+		echo "<p>Holiday Allowance<br /><input type=\"text\" name=\"user_holidays\" value=\"$user_holidays\" maxlength=\"6\" size=\"32\" /></p>";
 		echo "<p>Hourly Rate (excluding overheads)<br /><input type=\"text\" name=\"user_user_rate\" value=\"$user_user_rate\" maxlength=\"12\" size=\"32\" /></p>";
 		echo "<p><input type=\"checkbox\" name=\"user_user_timesheet\" value=\"1\"";
 		if ($user_user_timesheet == 1) { echo "checked=checked "; }
 		echo "/>&nbsp;Require Timesheets</p>";
+		echo "<p>Non-Fee Earning Time Allowance<br />";
+		echo "<select name=\"user_prop_target\">";
+		echo "<option value=\"0\" "; if ($user_prop_target == 0) { echo "selected=\"selected\""; } ; echo ">None</option>";
+		echo "<option value=\"0.1\" "; if ($user_prop_target == 0.1) { echo "selected=\"selected\""; } ; echo ">10%</option>";
+		echo "<option value=\"0.25\" "; if ($user_prop_target == 0.25) { echo "selected=\"selected\""; } ; echo ">25%</option>";
+		echo "<option value=\"0.5\" "; if ($user_prop_target == 0.5) { echo "selected=\"selected\""; } ; echo ">50%</option>";
+		echo "<option value=\"0.75\" "; if ($user_prop_target == 0.75) { echo "selected=\"selected\""; } ; echo ">75%</option>";
+		echo "<option value=\"1\" "; if ($user_prop_target == 1) { echo "selected=\"selected\""; } ; echo ">100%</option>";
+		echo "</select></p>";
 		echo "</fieldset>";
 	
 	}

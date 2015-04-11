@@ -58,6 +58,7 @@ if ($_GET[drawing_id] == NULL) {
 		echo "<select name=\"drawing_number_2\" id=\"text1.2\" disabled=\"disabled\" >";
 			echo "<option value=\"SK\">SK (Sketch)</option>";
 			echo "<option value=\"PL\">PL (Planning)</option>";
+			echo "<option value=\"TD\">TD (Tender)</option>";
 			echo "<option value=\"CT\">CN (Contract)</option>";
 			echo "<option value=\"CT\">CT (Construction)</option>";
 			echo "<option value=\"FD\">FD (Final Design)</option>";

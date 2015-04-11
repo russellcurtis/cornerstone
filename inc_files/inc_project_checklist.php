@@ -11,6 +11,29 @@ if ($_POST[item_id] > 0 && $_POST[item_notes] != NULL) {
 	
 }
 
+if ($_GET[action] == "checklist_duplicate_item") {
+		
+		$checklist_item = intval ( $_GET[item_id] );
+		$checklist_project = intval ( $_GET[proj_id] );
+		$checklist_user = intval ( $_COOKIE[user]);
+		$checklist_timestamp = time();
+
+		$sql_duplicate = "INSERT INTO intranet_project_checklist (checklist_id, checklist_item, checklist_timestamp, checklist_project, checklist_required, checklist_date, checklist_comment, checklist_user, checklist_link) VALUES (NULL,$checklist_item,$checklist_timestamp,$checklist_project,0,0,NULL,$checklist_user,NULL)";
+		$result_update = mysql_query($sql_duplicate, $conn) or die(mysql_error());
+	
+}
+
+if ($_GET[action] == "checklist_delete_item") {
+		
+		$checklist_id = intval ( $_GET[checklist_id] );
+		$checklist_project = intval ( $_GET[proj_id] );
+
+		$sql_delete = "DELETE FROM intranet_project_checklist WHERE checklist_id = $checklist_id AND checklist_project = $checklist_project LIMIT 1";
+		echo "<p>Entry deleted.</p>";
+		$result_delete = mysql_query($sql_delete, $conn) or die(mysql_error());
+	
+}
+
 $proj_id = $_GET[proj_id];
 
 $sql_project = "SELECT proj_num, proj_name FROM intranet_projects WHERE proj_id = $proj_id";
@@ -23,7 +46,8 @@ echo "<h1>Project Checklist for $proj_num $proj_name</h1>";
 
 echo "<p><a href=\"pdf_project_checklist.php?proj_id=$proj_id\">Click here for PDF version <img src=\"images/button_pdf.png\" /></a></p>";
 
-$sql_checklist = "SELECT * FROM intranet_project_checklist_items LEFT JOIN intranet_project_checklist ON checklist_item = item_id AND checklist_project = $proj_id ORDER BY item_group, item_order, item_name";
+$sql_checklist = "SELECT * FROM intranet_project_checklist_items LEFT JOIN intranet_project_checklist ON checklist_item = item_id AND checklist_project = $proj_id ORDER BY item_group, item_order, checklist_date DESC, item_name";
+
 $result_checklist = mysql_query($sql_checklist, $conn) or die(mysql_error());
 
 echo "
@@ -50,7 +74,9 @@ if (!$item) {
 
 
 echo "<table>";
-echo "<tr><th>Item</th><th>Required</th><th>Date Acquired</th><th>Comment</th><th colspan=\"3\">Link to File</th></tr>";
+echo "<tr><th>Item</th><th>Required</th><th>Date Completed</th><th>Comment</th><th colspan=\"3\">Link to File</th></tr>";
+
+$current_item = 0;
 
 if (mysql_num_rows($result_checklist) > 0) {
 
@@ -62,7 +88,7 @@ if (mysql_num_rows($result_checklist) > 0) {
 	$item_date = $array_checklist['item_date'];
 	$item_group = $array_checklist['item_group'];
 	$item_required = $array_checklist['item_required'];
-	$item_notes = nl2br( $array_checklist['item_notes']);
+	$item_notes = $array_checklist['item_notes'];
 	
 	$checklist_id = $array_checklist['checklist_id'];
 	$checklist_required = $array_checklist['checklist_required'];
@@ -70,13 +96,29 @@ if (mysql_num_rows($result_checklist) > 0) {
 	$checklist_comment = htmlentities ( $array_checklist['checklist_comment']);
 	$checklist_user = $_COOKIE[user];
 	$checklist_link	= $array_checklist['checklist_link'];
+	$checklist_item	= $array_checklist['checklist_item'];
 	$checklist_timestamp = time();
 	$checklist_project = $_GET[proj_id];
 	
 	if ($item_group != $group) { echo "<tr><td colspan=\"7\"><strong>$item_group</strong></td></tr>"; }
 	
 	
-	echo "<tr><td>" . $item_name . "</td>";
+	echo "<tr><td>";
+	//if ($item_name_current != $item_name) { 
+	
+	echo $item_name;
+	
+	if ($checklist_id > 0) {
+		echo "<span class=\"minitext\">&nbsp;<a href=\"index2.php?page=project_checklist&amp;proj_id=$proj_id&amp;action=checklist_duplicate_item&amp;item_id=$item_id \" onclick=\"return confirm('Are you sure you want to duplicate the checklist entry for \'$item_name\'?')\">[+]</a></span>";
+	}
+	
+	// Exclude the delete button if this is the second time it appears
+	if ($current_item == $item_id) {
+		echo "<span class=\"minitext\">&nbsp;<a href=\"index2.php?page=project_checklist&amp;proj_id=$proj_id&amp;action=checklist_delete_item&amp;checklist_id=$checklist_id \" onclick=\"return confirm('Are you sure you want to delete the checklist entry for \'$item_name\'?')\"><img src=\"images/button_delete.png\" alt=\"Delete Entry\" /></a></span>";
+	}
+	//}
+	$item_name_current = $item_name;
+	echo "</td>";
 	
 	echo "<td>";
 	
@@ -165,6 +207,8 @@ if (mysql_num_rows($result_checklist) > 0) {
 	}
 	
 	$group = $item_group;
+	
+	$current_item = $item_id;
 
 	}
 

@@ -1,5 +1,4 @@
-<?php
-
+<?
 $today = TimeFormatDay(time());
 
 print "<h1>$today</h1>";

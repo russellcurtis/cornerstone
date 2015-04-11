@@ -2,7 +2,7 @@
 
 // Item Sub Menu
 print "<p class=\"submenu_bar\">";
-	if ($user_usertype_current > 3 OR $user_id_current == $proj_rep_id) {
+	if ($user_usertype_current > 3 OR $user_id_current == $proj_rep_black) {
 		print "<a href=\"index2.php?page=project_edit&amp;status=edit&amp;proj_id=$proj_id\" class=\"submenu_bar\">Edit</a>";
 	}
 	if ($user_usertype_current > 1) {
@@ -20,7 +20,7 @@ print "<h2>View Invoices</h2>";
 if ($_POST[proj_id] != NULL) { $proj_id = $_POST[proj_id]; }
 
 
-$sql = "SELECT * FROM cstone_timesheet_invoice WHERE invoice_project = $proj_id order by invoice_ref";
+$sql = "SELECT * FROM intranet_timesheet_invoice WHERE invoice_project = $proj_id order by invoice_ref";
 $result = mysql_query($sql, $conn) or die(mysql_error());
 
 if (mysql_num_rows($result) > 0) {
@@ -43,10 +43,10 @@ while ($array = mysql_fetch_array($result)) {
 		$invoice_paid = $array['invoice_paid'];
 		
 				// Pull the corresponding results from the Invoice Item list
-				$sql2 = "SELECT * FROM cstone_timesheet_invoice_item WHERE invoice_item_invoice = '$invoice_id'";
+				$sql2 = "SELECT * FROM intranet_timesheet_invoice_item WHERE invoice_item_invoice = '$invoice_id'";
 				$result2 = mysql_query($sql2, $conn) or die(mysql_error());
 				// Pull the corresponding results from the Expenses List
-				$sql3 = "SELECT ts_expense_vat FROM cstone_timesheet_expense WHERE ts_expense_invoiced = '$invoice_id'";
+				$sql3 = "SELECT ts_expense_vat FROM intranet_timesheet_expense WHERE ts_expense_invoiced = '$invoice_id'";
 				$result3 = mysql_query($sql3, $conn) or die(mysql_error());
 				$rowspan = mysql_num_rows($result2) + 2;
 				if (mysql_num_rows($result3) > 0) { $rowspan++; }

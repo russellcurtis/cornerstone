@@ -26,20 +26,18 @@ include_once("inc_files/inc_menu_search.php");
 
 // Invoices
 
-if ($user_usertype_current > 3) {
-print "<h1 class=\"heading_side\">Invoices</h1>";
-}
-
-if ($user_usertype_current > 3) { print "<ul class=\"button_left\"><li>Quick Search - Enter Invoice Number<br /><form action=\"index2.php?page=timesheet_invoice_view\" method=\"post\"><input name=\"invoice_ref_find\" type=\"text\" /><br /><input type=\"submit\" /></form></li></ul>"; }
+if ($user_usertype_current > 3 && $module_invoices == 1) {
+echo "<h1 class=\"heading_side\">Invoices</h1>";
+echo "<ul class=\"button_left\"><li>Quick Search - Enter Invoice Number<br /><form action=\"index2.php?page=timesheet_invoice_view\" method=\"post\"><input name=\"invoice_ref_find\" type=\"text\" /><br /><input type=\"submit\" /></form></li></ul>"; }
 
 print "<ul class=\"button_left\">";
-if ($user_usertype_current > 3) { print "<li><a href=\"index2.php?page=timesheet_invoice\">Invoices</a></li>"; }	
-if ($user_usertype_current > 3) { print "<li><a href=\"index2.php?page=timesheet_invoice_edit\">Add Invoice</a></li>"; }
-if ($user_usertype_current > 3) { print "<li>Invoices<br />-&nbsp;<a href=\"index2.php?page=timesheet_invoice_view_outstanding&status=paid\">Paid Invoices</a>"; }
-if ($user_usertype_current > 3) { print "<br />-&nbsp;<a href=\"index2.php?page=timesheet_invoice_view_outstanding\">Oustanding Invoices</a>"; }	
-if ($user_usertype_current > 3) { print "<br />-&nbsp;<a href=\"index2.php?page=timesheet_invoice_view_outstanding&amp;status=current\">Current Invoices</a>"; }
-if ($user_usertype_current > 3) { print "<br />-&nbsp;<a href=\"index2.php?page=timesheet_invoice_view_outstanding&amp;status=future\">Future Invoices</a></li>"; }
-if ($user_usertype_current > 3) { print "<li><a href=\"index2.php?page=timesheet_invoice_view_month\">Invoices By Month</a>";
+if ($user_usertype_current > 3 && $module_invoices == 1) { print "<li><a href=\"index2.php?page=timesheet_invoice\">Invoices</a></li>"; }	
+if ($user_usertype_current > 3 && $module_invoices == 1) { print "<li><a href=\"index2.php?page=timesheet_invoice_edit\">Add Invoice</a></li>"; }
+if ($user_usertype_current > 3 && $module_invoices == 1) { print "<li>Invoices<br />-&nbsp;<a href=\"index2.php?page=timesheet_invoice_view_outstanding&status=paid\">Paid Invoices</a>"; }
+if ($user_usertype_current > 3 && $module_invoices == 1) { print "<br />-&nbsp;<a href=\"index2.php?page=timesheet_invoice_view_outstanding\">Oustanding Invoices</a>"; }	
+if ($user_usertype_current > 3 && $module_invoices == 1) { print "<br />-&nbsp;<a href=\"index2.php?page=timesheet_invoice_view_outstanding&amp;status=current\">Current Invoices</a>"; }
+if ($user_usertype_current > 3 && $module_invoices == 1) { print "<br />-&nbsp;<a href=\"index2.php?page=timesheet_invoice_view_outstanding&amp;status=future\">Future Invoices</a></li>"; }
+if ($user_usertype_current > 3 && $module_invoices == 1) { print "<li><a href=\"index2.php?page=timesheet_invoice_view_month\">Invoices By Month</a>";
 $nowyear = date("Y") + 1;
 
 $nowyear = $nowyear - 1;
