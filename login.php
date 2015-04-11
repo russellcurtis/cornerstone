@@ -1,4 +1,5 @@
 <?php
+
 // Perform the security check
 
 if ($_COOKIE[user] != NULL) {
@@ -15,11 +16,11 @@ include("inc_files/inc_header.php");
 
 // Header
 
-echo "<body>";
+print "<body>";
 
-echo "<div id=\"pagewrapper\">";
+print "<div id=\"pagewrapper\">";
 
-echo "<div id=\"login_head\">$settings_name</div>";
+print "<div id=\"login_head\">$settings_name</div>";
 
 print "<div id=\"login_body\">";
 

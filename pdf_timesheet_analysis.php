@@ -441,11 +441,18 @@ $pdf->AddFont($format_font,'',$format_font_2);
 		
 			// This prints the fee stages
 			// First establish the width of the fee stage bar
-			$sql_fee_stage = "SELECT ts_fee_value, ts_fee_stage FROM intranet_timesheet_fees WHERE ts_fee_id = $ts_fee_id ";
+			$sql_fee_stage = "SELECT ts_fee_value, ts_fee_stage, ts_fee_commence, ts_fee_time_end FROM intranet_timesheet_fees WHERE ts_fee_id = $ts_fee_id ";
 			$result_fee_stage = mysql_query($sql_fee_stage, $conn) or die(mysql_error());
 			$array_fee_stage = mysql_fetch_array($result_fee_stage);
 			$fee_stage = $array_fee_stage['ts_fee_value'];
-			$fee_stage_id = $array_fee_stage['ts_fee_stage'];
+			$fee_commence = AssessDays ( $array_fee_stage['ts_fee_commence'] );
+			$fee_time_end = $array_fee_stage['ts_fee_time_end'] + $fee_commence;
+			if ( ($fee_commence < time() ) && ( $fee_time_end > time() ) ) {
+				//$percent_complete = (time() - $fee_commence) / ($fee_time_end);
+				//$percent_complete = round ($percent_complete,0) . "%";
+			} else { 
+				//$percent_complete = $fee_time_end;
+			}
 			
 		
 			
@@ -478,7 +485,7 @@ $pdf->AddFont($format_font,'',$format_font_2);
 			if ($this_bar_width > 0 OR $cost_bar_width > 0) {
 			
 			$fee_stage_print = str_replace( "&pound;" , "£" , MoneyFormat($fee_stage) ); 
-			$cost_total = str_replace( "&pound;" , "£" , MoneyFormat($cost_total) )  . " [" . $ts_fee_text . "]";
+			$cost_total = str_replace( "&pound;" , "£" , MoneyFormat($cost_total) )  . " [" . $ts_fee_text . "]" . $percent_complete;
 			// $cost_total = $ts_fee_text . "(";
 			$cost_total = RemoveShit($cost_total);
 			SetBarLBlue();
@@ -579,6 +586,8 @@ $pdf->Cell(0,4,'',0,1);
 	
 	while ($array_userhours = mysql_fetch_array($result_userhours)) {
 		
+		if ($pdf->GetY() > 280) { $pdf->addPage(); }
+		
 		$user_id = $array_userhours['user_id'];
 		$user_name_first = $array_userhours['user_name_first'];
 		$user_name_second = $array_userhours['user_name_second'];
@@ -606,6 +615,9 @@ $pdf->Cell(0,4,'',0,1);
 			$percent_nonproject = $hours_nonproject / $hours_total;
 			
 			if ($percent_nonproject > 1) { $percent_nonproject = 1; }
+			
+			$sql_nonproj = "UPDATE intranet_user_details SET user_prop = " . round( $percent_nonproject, 2 ) . " WHERE user_id = $user_id LIMIT 1";
+			$result_nonproj = mysql_query($sql_nonproj, $conn) or die(mysql_error());
 		
 		if ($percent_complete > 1) { $percent_complete = 1; }
 		if ($percent_complete == 0) { $percent_complete = 0.01; }
@@ -729,6 +741,8 @@ $pdf->Cell(0,4,'',0,1);
 			
 			
 		$pdf->Cell(0,6,'',0,1,L);
+		
+		
 				
 	}
 
@@ -789,9 +803,9 @@ function HolidayCalendar($year) {
 							// Add a square showing the month if this is the first...
 							if (date("j",$today) == 1) { $pdf->SetTextColor(255); $pdf->SetFont('Helvetica','b',6); SetBarPurple(); $pdf->Cell(5,4.5,$month,TBL,0,L,1); $month_begin = 1; }
 							
-							if ( date("n",time()) == date("n",$today) && date("j",time()) == date("j",$today) ) {
+							if ( date("n",time()) == date("n",$today) && date("j",time()) == date("j",$today) && date("Y",time()) == date("Y",$today) ) {
 							SetBarDBlue();
-							} elseif (date("W",time()) == date("W",$today)) {
+							} elseif (date("W",time()) == date("W",$today) && date("Y",time()) == date("Y",$today)) {
 							SetBarLBlue();
 							} elseif ( date("n",time()) == date("n",$today) ) {
 							$pdf->SetFillColor(160);

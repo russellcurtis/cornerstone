@@ -1,6 +1,8 @@
 <?php
 
-include("inc_files/inc_checkcookie.php");
+echo "<h1>Test</h1>"
+
+//include("inc_files/inc_checkcookie.php");
 
 /***************************************************************************
 
@@ -250,10 +252,10 @@ $v->setURL($company_web);
 $output = $v->getVCard();
 $filename = $v->getFileName();
 
-Header("Content-Disposition: attachment; filename=$filename");
-Header("Content-Length: ".strlen($output));
-Header("Connection: close");
-Header("Content-Type: text/x-vCard; name=$filename");
+//Header("Content-Disposition: attachment; filename=$filename");
+//Header("Content-Length: ".strlen($output));
+//Header("Connection: close");
+//Header("Content-Type: text/x-vCard; name=$filename");
 
 echo $output;
 ?>
