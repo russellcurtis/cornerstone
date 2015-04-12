@@ -1,6 +1,6 @@
 localhost
 root
-pa105793
+<<password>>
 cornerstone
 1
 1

@@ -1,6 +1,0 @@
-<?php
-
-$conn_web = mysql_connect("db2551.oneandone.co.uk", "dbo333235534", "pa105793");
-mysql_select_db("db333235534", $conn_web);
-
-?>
