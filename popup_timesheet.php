@@ -36,9 +36,13 @@ print "<div id=\"pagewrapper\">";
 if ($timesheetcomplete > $settings_timesheetlimit) { echo "<p><a href=\"index2.php\"><< back to intranet</a>"; }
 
 if ($user_usertype_current > 3 AND $TSFormat == "popup") {
+	
+	$weeks_expired = 6; // This controls how long we wait before people who have left the practice vanish from the top bar
+	$weeks_expired = $weeks_expired * 604800;
+	$weeks_expired = $ts_weekbegin - $weeks_expired;
 
 	echo "&nbsp;&nbsp;&nbsp;User:";
-	$sql_userlist = "SELECT user_initials, user_id, user_name_first, user_name_second FROM intranet_user_details ORDER BY user_initials";
+	$sql_userlist = "SELECT user_initials, user_id, user_name_first, user_name_second FROM intranet_user_details WHERE (user_user_ended IS NULL) OR (user_user_ended > $weeks_expired) ORDER BY user_initials";
 	$result_userlist = mysql_query($sql_userlist, $conn);
 	while ($array_userlist = mysql_fetch_array($result_userlist)) {
 	$user_id = $array_userlist['user_id'];

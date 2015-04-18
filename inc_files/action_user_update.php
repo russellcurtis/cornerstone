@@ -3,6 +3,9 @@
 if ($_POST[user_id] != "") { $user_id = $_POST[user_id]; }
 else { $user_id = ""; }
 
+	$user_user_added = AssessDays($_POST[user_user_added],8);
+	$user_user_ended = AssessDays($_POST[user_user_ended],18);
+
 	$sql = "UPDATE intranet_user_details SET
 	user_address_county = '$_POST[user_address_county]',
 	user_address_postcode = '$_POST[user_address_postcode]',
@@ -20,8 +23,9 @@ else { $user_id = ""; }
 	user_active = '$_POST[user_active]',
 	user_username = '$_POST[user_username]',
 	user_user_rate = '$_POST[user_user_rate]',
-	user_user_added = '$_POST[user_user_added]',
 	user_user_timesheet = '$_POST[user_user_timesheet]',
+	user_user_added = '$user_user_added',
+	user_user_ended = '$user_user_ended',
 	user_holidays = '$_POST[user_holidays]',
 	user_initials = '$_POST[user_initials]',
 	user_prop_target = '$_POST[user_prop_target]',
@@ -29,9 +33,10 @@ else { $user_id = ""; }
 	WHERE user_id = '$user_id' LIMIT 1";
 	
 	
+	
 	$result = mysql_query($sql, $conn) or die(mysql_error());	
 	
-
+	//echo "<p>$sql</p>";
 
 
 

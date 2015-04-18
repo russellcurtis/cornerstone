@@ -134,7 +134,7 @@ $year = date ("Y", time());
 
 echo "<h2>Holidays in $year</h2>";
 
-$sql_users = "SELECT * FROM intranet_user_details, intranet_user_holidays WHERE user_id = holiday_user AND holiday_year >= 2012 AND user_active = 1 GROUP BY user_id ORDER BY user_name_second";
+$sql_users = "SELECT * FROM intranet_user_details WHERE user_active = 1 ORDER BY user_name_second";
 
 
 $result_users = mysql_query($sql_users, $conn);

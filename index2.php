@@ -15,7 +15,7 @@ include "secure/prefs.php";
 		
 		if ( $_COOKIE[timesheetcomplete] < 75) { 
 		
-		$timesheetaction = "<h1 class=\"heading_alert\">Timesheets</h1><p>Your timesheets are only " . $timesheetcomplete . "% complete - <a href = \"popup_timesheet.php\">please fill them out</a>!</p><p>If your timesheet drops below " . $settings_timesheetlimit . "% complete, you will not be able to access the intranet.<br / ><a href=\"index2.php?page=timesheet_incomplete_listStuar\">Click here for a list of incomplete days</a>.";
+		$timesheetaction = "<h1 class=\"heading_alert\">Timesheets</h1><p>Your timesheets are only " . $timesheetcomplete . "% complete - <a href = \"popup_timesheet.php\">please fill them out</a>!</p><p>If your timesheet drops below " . $settings_timesheetlimit . "% complete, you will not be able to access the intranet.<br / ><a href=\"index2.php?page=timesheet_incomplete_list\">Click here for a list of incomplete days</a>.";
 		// echo "<a href=\"index2.php?page=timesheets_incomplete_list\">Click here</a> to view your incomplete days</a>";
 		echo "</p>"; 
 		

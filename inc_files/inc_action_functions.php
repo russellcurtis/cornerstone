@@ -9,6 +9,20 @@ $currency_junk = array("£","€");
 
 $text_remove = array("Ã","Â");
 
+function CreateDays($date,$hour) {
+
+		//Take the date and explode it into an array
+		//$date_array = explode("-",$date);
+		//$d = $date_array[2];
+		//$m = $date_array[1];
+		//$y = $date_array[0];
+
+		//if ($date == "0000-00-00") { $output = NULL; } else { $output = mktime($hour,0,0,$m,$d,$y); }
+		
+		//return $output;
+	
+}
+
 function CleanUp($input) {
 	// global $currency_symbol;
 	// global $currency_text;
@@ -238,14 +252,16 @@ function InvoiceDueDays($invoice_text, $invoice_due, $invoice_date) {
 }
 
 
-function AssessDays($input) {
+function AssessDays($input,$hour) {
+	
+		if ($hour == NULL) { $hour = 12; }
 
 		$date_array = explode("-",$input);
 		$d = $date_array[2];
 		$m = $date_array[1];
 		$y = $date_array[0];
 		
-		$time = mktime(12, 0, 0, $m ,$d, $y);
+		$time = mktime($hour, 0, 0, $m ,$d, $y);
 		
 		return $time ;
 

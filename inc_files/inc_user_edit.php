@@ -86,15 +86,46 @@ if ($user_id != NULL) {
 		echo "<p>Non-Fee Earning Time Allowance<br />";
 		echo "<select name=\"user_prop_target\">";
 		echo "<option value=\"0\" "; if ($user_prop_target == 0) { echo "selected=\"selected\""; } ; echo ">None</option>";
+		echo "<option value=\"0.05\" "; if ($user_prop_target == 0.05) { echo "selected=\"selected\""; } ; echo ">%5</option>";
 		echo "<option value=\"0.1\" "; if ($user_prop_target == 0.1) { echo "selected=\"selected\""; } ; echo ">10%</option>";
+		echo "<option value=\"0.15\" "; if ($user_prop_target == 0.15) { echo "selected=\"selected\""; } ; echo ">15%</option>";
+		echo "<option value=\"0.2\" "; if ($user_prop_target == 0.2) { echo "selected=\"selected\""; } ; echo ">20%</option>";
 		echo "<option value=\"0.25\" "; if ($user_prop_target == 0.25) { echo "selected=\"selected\""; } ; echo ">25%</option>";
+		echo "<option value=\"0.3\" "; if ($user_prop_target == 0.3) { echo "selected=\"selected\""; } ; echo ">30%</option>";
+		echo "<option value=\"0.35\" "; if ($user_prop_target == 0.35) { echo "selected=\"selected\""; } ; echo ">35%</option>";
+		echo "<option value=\"0.4\" "; if ($user_prop_target == 0.4) { echo "selected=\"selected\""; } ; echo ">40%</option>";
+		echo "<option value=\"0.45\" "; if ($user_prop_target == 0.45) { echo "selected=\"selected\""; } ; echo ">45%</option>";
 		echo "<option value=\"0.5\" "; if ($user_prop_target == 0.5) { echo "selected=\"selected\""; } ; echo ">50%</option>";
+		echo "<option value=\"0.55\" "; if ($user_prop_target == 0.55) { echo "selected=\"selected\""; } ; echo ">55%</option>";
+		echo "<option value=\"0.60\" "; if ($user_prop_target == 0.6) { echo "selected=\"selected\""; } ; echo ">60%</option>";
+		echo "<option value=\"0.65\" "; if ($user_prop_target == 0.65) { echo "selected=\"selected\""; } ; echo ">65%</option>";
+		echo "<option value=\"0.70\" "; if ($user_prop_target == 0.7) { echo "selected=\"selected\""; } ; echo ">70%</option>";
 		echo "<option value=\"0.75\" "; if ($user_prop_target == 0.75) { echo "selected=\"selected\""; } ; echo ">75%</option>";
+		echo "<option value=\"0.80\" "; if ($user_prop_target == 0.8) { echo "selected=\"selected\""; } ; echo ">80%</option>";
+		echo "<option value=\"0.85\" "; if ($user_prop_target == 0.85) { echo "selected=\"selected\""; } ; echo ">85%</option>";
+		echo "<option value=\"0.9\" "; if ($user_prop_target == 0.9) { echo "selected=\"selected\""; } ; echo ">90%</option>";
+		echo "<option value=\"0.95\" "; if ($user_prop_target == 0.95) { echo "selected=\"selected\""; } ; echo ">95%</option>";
 		echo "<option value=\"1\" "; if ($user_prop_target == 1) { echo "selected=\"selected\""; } ; echo ">100%</option>";
 		echo "</select></p>";
 		echo "</fieldset>";
 	
 	}
+	
+	echo "<fieldset><legend>Dates</legend>";
+		
+		if ($user_user_added > 0) {
+			$user_user_added_print = date("Y",$user_user_added) . "-" . date("m",$user_user_added) . "-" . date("d",$user_user_added);
+		} else { unset($user_user_added); }
+		
+		if ($user_user_ended > 0) {
+			$user_user_ended_print = date("Y",$user_user_ended) . "-" . date("m",$user_user_ended) . "-" . date("d",$user_user_ended);
+		} else { unset($user_user_ended); }
+	
+		echo "<p>Date Started<br /><input type=\"date\" name=\"user_user_added\" value=\"$user_user_added_print\" /></p>";
+		
+		echo "<p>Date Ended<br /><input type=\"date\" name=\"user_user_ended\" value=\"$user_user_ended_print\" /></p>";
+		
+	echo "</fieldset>";
 	
 	if ($user_id > NULL) {
 	echo "<input type=\"hidden\" name=\"action\" value=\"user_update\" />";

@@ -14,7 +14,9 @@ if ($user_usertype_current <= 3) { header ("Location: index2.php"); } else {
 $colwidth = 10;
 $rowheight = 4;
 
-$current_time = BeginMonth(time(),1,2);
+if ($_GET[timestart] == NULL) { $timestart = time(); } else { $timestart = $_GET[timestart]; }
+
+$current_time = BeginMonth($timestart,1,2);
 
 $format_bg_r = "0";
 $format_bg_g = "0";
@@ -260,7 +262,7 @@ DrawGrid();
 		
 		$current_proj = $proj_id;
 		
-		if ($pdf->GetY() > 180) { $pdf->addPage(L); DrawGrid(); }
+		if ($pdf->GetY() > 170) { $pdf->addPage(L); DrawGrid(); }
 		
 	}
 	
@@ -311,6 +313,9 @@ DrawGrid();
 		}
 		
 		
+		if ($pdf->GetY() > 170) { $pdf->addPage(L); DrawGrid(); }
+		
+		
 		// Add cost of staff
 		
 		function StaffCost($time,$prop) {
@@ -318,7 +323,7 @@ DrawGrid();
 			GLOBAL $conn;
 			$start = $time;
 			$end = $time + 604800;
-			$sql_staff = "SELECT user_timesheet_hours, user_user_rate, user_prop, user_prop_target FROM intranet_user_details WHERE user_user_added < $start AND ( user_user_ended > $start OR user_user_ended IS NULL ) AND user_active = 1";
+			$sql_staff = "SELECT user_timesheet_hours, user_user_rate, user_prop, user_prop_target FROM intranet_user_details WHERE user_user_added < $start AND ( user_user_ended > $start OR user_user_ended IS NULL OR user_user_ended = 0 ) AND user_active = 1";
 			$result_staff = mysql_query($sql_staff, $conn) or die(mysql_error());
 			$weekly_cost = 0;
 			while ($array_staff = mysql_fetch_array($result_staff)) {
@@ -356,7 +361,7 @@ DrawGrid();
 			$beginweek = $beginweek + 604800;
 		}
 		
-	if ($pdf->GetY() > 180) { $pdf->addPage(L); DrawGrid(); }
+	if ($pdf->GetY() > 170) { $pdf->addPage(L); DrawGrid(); }
 
 		
 	$x = 0;
@@ -376,7 +381,7 @@ DrawGrid();
 			$beginweek = $beginweek + 604800;
 		}	
 
-	if ($pdf->GetY() > 180) { $pdf->addPage(L); DrawGrid(); }
+	if ($pdf->GetY() > 170) { $pdf->addPage(L); DrawGrid(); }
 		
 	$x = 0;
 	$y = $pdf->GetY() + 5;
@@ -400,7 +405,7 @@ DrawGrid();
 			$arrayname++;
 		}
 		
-	if ($pdf->GetY() > 180) { $pdf->addPage(L); DrawGrid(); }
+	if ($pdf->GetY() > 170) { $pdf->addPage(L); DrawGrid(); }
 		
 		$x = 0;
 	$y = $pdf->GetY();
@@ -420,7 +425,7 @@ DrawGrid();
 			$counter++;
 		}
 
-		if ($pdf->GetY() > 180) { $pdf->addPage(L); DrawGrid(); }
+		if ($pdf->GetY() > 170) { $pdf->addPage(L); DrawGrid(); }
 		
 		$x = 0;
 	$y = $pdf->GetY();
@@ -469,12 +474,14 @@ DrawGrid();
 	$range = $axis_y_max - $axis_y_min;
 	$ratio = $height / $range;
 	// Datum line
+	$pdf->Cell(0,5,"£0",0,0);
 	$pdf->Line($x,$y,280,$y);
 	
 	// Maximum line
 	$pdf->SetDrawColor(200);
 	$start_y = $y - ($ratio * $axis_y_max);
 	$pdf->Line($x,$start_y,280,$start_y);
+	
 	// Minimum line
 	$start_y = $y - ($ratio * $axis_y_min);
 	$pdf->Line($x,$start_y,280,$start_y);
@@ -488,8 +495,7 @@ DrawGrid();
 		$counter = 0;
 		while ($x <= 270) {
 			$y_fee_start = $y - ($ratio * $weekdiff_array[$counter]);
-			$y_fee_end = $y - ($ratio * $weekdiff_array[$counter + 1]);
-			
+			$y_fee_end = $y - ($ratio * $weekdiff_array[$counter + 1]);		
 			$pdf->Line($x,$y_fee_start,$x + $colwidth,$y_fee_end);
 			$x = $x + $colwidth;
 			$counter++;
