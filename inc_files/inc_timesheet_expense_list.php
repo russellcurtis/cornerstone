@@ -25,10 +25,7 @@ $sql = "SELECT * FROM intranet_projects, intranet_timesheet_expense LEFT JOIN in
 
 } else {
 
-//$sql = "SELECT * FROM intranet_projects, intranet_timesheet_expense LEFT JOIN intranet_timesheet_expense_category ON ts_expense_category = expense_cat_id  WHERE ts_expense_project = proj_id AND ts_expense_verified = 0 OR ts_expense_project = proj_id AND ts_expense_verified = '' $user_filter AND $user_usertype_current >= expense_cat_clearance ORDER BY proj_num, ts_expense_date LIMIT $list_begin, $list_length";
-
 $sql = "SELECT * FROM intranet_projects, intranet_timesheet_expense LEFT JOIN intranet_timesheet_expense_category ON ts_expense_category = expense_cat_id  WHERE (ts_expense_project = proj_id AND ts_expense_verified = 0) OR (ts_expense_project = proj_id AND ts_expense_verified = NULL) OR (ts_expense_project = proj_id AND ts_expense_verified = '') $user_filter AND $user_usertype_current >= expense_cat_clearance ORDER BY proj_num, ts_expense_date LIMIT $list_begin, $list_length";
-
 
 }
 
@@ -48,7 +45,7 @@ if (mysql_num_rows($result) > 0) {
 		} else {
 		echo (mysql_num_rows($result) + $list_begin + 2).".";
 		}
-		echo "</p>";
+		echo "&nbsp;<a href=\"pdf_expense_claim.php?user_id=$user_id\"><img src=\"images/button_pdf.png\" alt=\"PDF expenses claim\" /></a></p>";
 
 $counter = 1;
 

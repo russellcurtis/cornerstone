@@ -53,7 +53,12 @@ print "<h1 class=\"heading_side\">Invoices</h1>";
 print "<ul class=\"button_left\">";
 if ($user_usertype_current > 3) { print "<li><a href=\"index2.php?page=timesheet_invoice\">Invoices</a></li>"; }
 print "<li><a href=\"index2.php?page=timesheet_expense_edit\">Add Expenses</a>&nbsp;<a href=\"popup_expenses.php\">[Quick Add]</a></li>";
-print "<li><a href=\"index2.php?page=timesheet_expense_list&amp;user_id=$user_id_current\">List My Expenses</a></li>";
+print "<li><a href=\"index2.php?page=timesheet_expense_list&amp;user_id=$user_id_current\">List My Expenses</a>";
+
+	$sql_expense = "SELECT ts_expense_id FROM intranet_timesheet_expense WHERE ts_expense_user = '$_COOKIE[user]' AND ( ts_expense_verified = 0 OR ts_expense_verified IS NULL )";
+	$result_expense = mysql_query($sql_expense, $conn) or die(mysql_error());
+	if (mysql_num_rows($result_expense) > 0){ echo "&nbsp;<a href=\"pdf_expense_claim.php?user_id=$_COOKIE[user]\"><img src=\"images/button_pdf.png\" alt=\"Expenses Claim\" /></a>"; }
+echo "</li>";
 print "</ul>";
 }
 
