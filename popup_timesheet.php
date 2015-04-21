@@ -41,8 +41,8 @@ if ($user_usertype_current > 3 AND $TSFormat == "popup") {
 	$weeks_expired = $weeks_expired * 604800;
 	$weeks_expired = $ts_weekbegin - $weeks_expired;
 
-	echo "&nbsp;&nbsp;&nbsp;User:";
-	$sql_userlist = "SELECT user_initials, user_id, user_name_first, user_name_second FROM intranet_user_details WHERE (user_user_ended IS NULL) OR (user_user_ended > $weeks_expired) ORDER BY user_initials";
+	echo "&nbsp;&nbsp;&nbsp;User:&nbsp;";
+	$sql_userlist = "SELECT user_initials, user_id, user_name_first, user_name_second FROM intranet_user_details WHERE (user_user_ended IS NULL OR user_user_ended = 0) AND (user_user_ended < $weeks_expired OR  user_user_ended IS NULL OR user_user_ended = 0) ORDER BY user_initials";
 	$result_userlist = mysql_query($sql_userlist, $conn);
 	while ($array_userlist = mysql_fetch_array($result_userlist)) {
 	$user_id = $array_userlist['user_id'];

@@ -65,7 +65,7 @@ include "secure/prefs.php";
 		
 // Check for any upcoming holidays
 
-$nowtime = time();
+$nowtime = time() - 43200;
 
 		$sql5 = "SELECT user_id, user_name_first, user_name_second, holiday_date, holiday_timestamp, holiday_paid, holiday_length FROM intranet_user_details, intranet_user_holidays WHERE holiday_user = user_id AND holiday_timestamp BETWEEN $nowtime AND " . ($nowtime + (2 * 604800)) ." ORDER BY holiday_timestamp, user_name_second";
 		$result5 = mysql_query($sql5, $conn) or die(mysql_error());
