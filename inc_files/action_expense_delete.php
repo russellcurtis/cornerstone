@@ -36,8 +36,6 @@ $sql_edit = "UPDATE intranet_timesheet_expense SET
 		$actionmessage = "Expense <strong>$ts_expense_id</strong> deleted successfully.";
 		$techmessage = $sql_edit;
 		
-		echo $sql_edit;
-
 }
 
 ?>

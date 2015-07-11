@@ -84,7 +84,8 @@ $pdf->SetFont("Helvetica",'B',6);
 $pdf->Cell(25,5,"Drawing Number",B,0,L,0);
 $pdf->Cell(10,5,"Size",B,0,L,0);
 $pdf->Cell(20,5,"Scale",B,0,L,0);
-$pdf->Cell(100,5,"Drawing Title",B,0,L,0);
+$pdf->Cell(80,5,"Drawing Title",B,0,L,0);
+$pdf->Cell(20,5,"Target Date",B,0,L,0);
 $pdf->Cell(15,5,"Current Rev.",B,0,L,0);
 $pdf->Cell(20,5,"Date",B,1,L,0);
 
@@ -102,6 +103,8 @@ while ($array_drawings = mysql_fetch_array($result_drawings)) {
 	$drawing_title = str_replace("\n",", ",$array_drawings['drawing_title']);
 	$drawing_title = preg_replace('/[^(\x20-\x7F)]*/','', $drawing_title);
 	$drawing_date = $array_drawings['drawing_date'];
+	$drawing_targetdate = $array_drawings['drawing_targetdate'];
+	$drawing_comment = $array_drawings['drawing_comment'];
 	$scale_desc = $array_drawings['scale_desc'];
 	$paper_size = $array_drawings['paper_size'];
 	
@@ -134,7 +137,12 @@ while ($array_drawings = mysql_fetch_array($result_drawings)) {
 		$pdf->Cell(25,4.5,$drawing_number,$border,0,L,$fill,$link);
 		$pdf->Cell(10,4.5,$paper_size,$border,0,L,$fill);
 		$pdf->Cell(20,4.5,$scale_desc,$border,0,L,$fill);
-		$pdf->Cell(100,4.5,$drawing_title,$border,0,L,$fill);
+		if ($drawing_targetdate != "0000-00-00") {
+			$pdf->Cell(80,4.5,$drawing_title,$border,0,L,$fill);
+			$pdf->Cell(20,4.5,$drawing_targetdate,$border,0,L,$fill);
+		} else {
+			$pdf->Cell(100,4.5,$drawing_title,$border,0,L,$fill);		
+		}
 		$pdf->Cell(15,4.5,$revision_letter,$border,0,C,$fill);
 		$pdf->Cell(20,4.5,$revision_date,$border,1,L,$fill);
 		
@@ -143,6 +151,11 @@ while ($array_drawings = mysql_fetch_array($result_drawings)) {
 		// Cross out this drawing if now obsolete
 		if ($revision_letter == "*") { $y = $y - 3.25; $pdf->SetY($y); $pdf->SetLineWidth(0.1); $pdf->SetDrawColor(0,0,0); $pdf->Cell(0,1,'',B,1); $y = $y + 3.25; $pdf->SetY($y); $pdf->SetDrawColor(200, 200, 200); $obsolete_message = "* Drawing obsolete";  }
 
+		if ($drawing_comment != NULL && $revision_letter != "*") {
+			$pdf->Cell(25,4.5,'',$border,0,L,$fill,$link);
+			$pdf->Cell(0,4.5,$drawing_comment,$border,1,L,$fill);
+		}
+		
 		if ($fill == 1) { $fill = 0; } else { $fill = 1; }
 
 	}

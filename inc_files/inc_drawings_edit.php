@@ -16,6 +16,8 @@ $drawing_orientation = $array['drawing_orientation'];
 $drawing_date = $array['drawing_date'];
 $drawing_paper = $array['drawing_paper'];
 $drawing_packages = $array['drawing_packages'];
+$drawing_targetdate = $array['drawing_targetdate'];
+$drawing_comment = $array['drawing_comment'];
 $proj_id = $drawing_project;
 $proj_num = $array['proj_num'];
 } else {
@@ -37,6 +39,8 @@ unset($drawing_orientation);
 unset($drawing_date);
 unset($drawing_paper);
 unset($drawing_packages);
+unset($drawing_targetdate);
+unset($drawing_comment);
 $proj_id = $_GET[proj_id];
 }
 
@@ -218,10 +222,23 @@ print "<input type=\"text\" name=\"drawing_date_month\" value=\"$drawing_date_mo
 print "<input type=\"text\" name=\"drawing_date_year\" value=\"$drawing_date_year\" maxlength=\"4\" size=\"4\" required=\"required\" />&nbsp;Year"; 
 print "</p>";
 
+
+print "<p>";
+print "Target Date for Drawing Issue (DD/MM/YYYY)<br />";
+print "<input type=\"date\" name=\"drawing_targetdate\" value=\"$drawing_targetdate\"/>";
+echo "</p>";
+
+print "<p>";
+print "Comment<br />";
+print "<input type=\"text\" name=\"drawing_comment\" value=\"$drawing_comment\" maxlength=\"200\"/>";
+echo "</p>";
+
 print "<p>";
 print "<input type=\"submit\" />";
 print "<input type=\"hidden\" name=\"action\" value=\"drawing_edit\"  />";
 print "<input type=\"hidden\" name=\"drawing_project\" value=\"$proj_id\"  />";
+echo "</p>";
+
 
 if ($drawing_id != NULL) {
 	print "<input type=\"hidden\" name=\"drawing_id\" value=\"$drawing_id\"  />";

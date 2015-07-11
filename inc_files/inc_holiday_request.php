@@ -2,13 +2,17 @@
 
 if ($_GET[year] != NULL) { $this_year = $_GET[year]; } else { $this_year =  date("Y",time()); }
 
-if ($_POST[user_id] != NULL) { $user_id = $_POST[user_id]; } else { $user_id = $_COOKIE[user]; }
+if ($_POST[user_id] != NULL) { $user_id = $_POST[user_id]; } elseif ($_GET[user_id] != NULL) { $user_id = $_GET[user_id]; } else { $user_id = $_COOKIE[user]; }
 
-if ($_GET[user_id] != NULL) { $user_id = $_GET[user_id]; }
+$sql_user = "SELECT user_name_first, user_name_second FROM intranet_user_details WHERE user_id = $user_id";
+$result_user = mysql_query($sql_user, $conn);
+$array_user = mysql_fetch_array($result_user);
+$user_name_first = $array_user['user_name_first'];
+$user_name_second = $array_user['user_name_second'];
 
 if ($_POST[paid] == 1) { $paid = 1; } else { $paid = 0; }
 
-echo "<h1>Holidays</h1>";
+echo "<h1>Holidays - $user_name_first $user_name_second</h1>";
 
 echo "<h2>Bank Holidays</h2>";
 
@@ -34,22 +38,29 @@ $end_of_year = mktime(0,0,0,1,1,($this_year+1));
 
 echo "<h2>Holiday Request</h2>";
 
-echo "<p>Time: " . TimeFormatDetailed ( BeginWeek ( time() ) ) . "</p>";
-
 $holiday_remaining = UserHolidays($user_id,"yes");
 
 if ($_POST[assess] == 1) {
-echo "<fieldset><legend>Confirm Holiday Request</legend><p>You are requesting the following days holiday:</p>";
+echo "<fieldset><legend>Confirm Holiday Request</legend>";
 
-echo "<p>Your holiday request is for $holiday_count days, beginning " . TimeFormat($time_begin) . ", returning to work on " . TimeFormat($time_back) . ".</p><p>This will leave you with " . $holiday_remaining . " remaining holidays this year.</p><p><form action=\"index2.php?page=holiday_request\" method=\"post\"><input type=\"hidden\" name=\"action\" value=\"holiday_request\" /><input type=\"hidden\" name=\"assess\" value=\"2\" /><input type=\"hidden\" value=\"$time_begin\" name=\"holiday_begin\" /><input type=\"hidden\" value=\"$_POST[holiday_length]\" name=\"holiday_length\" /><input type=\"hidden\" value=\"$time_back\" name=\"holiday_back\" /><input type=\"hidden\" value=\"$user_id\" name=\"user_id\" /><input type=\"hidden\" value=\"$paid\" name=\"paid\" /><input type=\"submit\" value=\"Confirm\" /></p>";
+$holiday_day_start = AssessDays ( $_POST[holiday_day_start] );
+$holiday_day_back = AssessDays ( $_POST[holiday_day_back] );
 
+$holiday_count = CheckHolidays($holiday_day_start,$holiday_day_back,"no",$user_id, $_POST[holiday_length],$paid);
+
+$holiday_remaining = $holiday_remaining - $holiday_count;
+
+echo "<p>This will leave you with " . $holiday_remaining . " remaining holidays this year.</p>";
+
+
+		echo "<p><form action=\"index2.php?page=holiday_request\" method=\"post\"><input type=\"hidden\" name=\"action\" value=\"holiday_request\" /><input type=\"hidden\" name=\"assess\" value=\"2\" /><input type=\"hidden\" value=\"$time_begin\" name=\"holiday_begin\" /><input type=\"hidden\" value=\"$_POST[holiday_length]\" name=\"holiday_length\" /><input type=\"hidden\" value=\"$time_back\" name=\"holiday_back\" /><input type=\"hidden\" value=\"$user_id\" name=\"user_id\" /><input type=\"hidden\" value=\"$paid\" name=\"paid\" /><input type=\"submit\" value=\"Confirm\" /></p>";
 
 
 echo "</fieldset>";
 }
 
 if ($_POST[assess] == 2) {
-echo "<fieldset><legend>Holiday Request</legend><p>Your holiday request has been submitted for the following days:";
+echo "<fieldset><legend>Holiday Request Confirmed</legend>";
 $holiday_count = CheckHolidays($_POST[holiday_begin],$_POST[holiday_back],"yes",$user_id, $_POST[holiday_length],$paid);
 $holiday_remaining = $user_holidays - $holiday_count;
 echo "</fieldset>";

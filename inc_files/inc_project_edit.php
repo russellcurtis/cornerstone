@@ -12,7 +12,6 @@ print "<p class=\"menu_bar\">";
 print "<a href=\"#\" onclick=\"itemSwitch(1); return false;\" class=\"menu_tab\">Main</a>";
 print "<a href=\"#\" onclick=\"itemSwitch(2); return false;\" class=\"menu_tab\">Client</a>";
 print "<a href=\"#\" onclick=\"itemSwitch(3); return false;\" class=\"menu_tab\">Particulars</a>";
-print "<a href=\"#\" onclick=\"itemSwitch(4); return false;\" class=\"menu_tab\">Contacts</a>";
 print "</p>";
 
 // Now populate the variables with either the failed results from the $_POST submission or from the database if we're editing an existing project
@@ -143,6 +142,19 @@ $proj_planning_ref = $_POST[proj_planning_ref];
 $proj_buildingcontrol_ref = $_POST[proj_buildingcontrol_ref];
 $proj_fee_percentage = $_POST[proj_fee_percentage];
 
+// Find the next number in the sequence
+if ($_POST[proj_num] == NULL) {
+	$sql_newnum = "SELECT proj_num FROM intranet_projects ORDER BY proj_num DESC LIMIT 1";
+	$result_newnum = mysql_query($sql_newnum, $conn);
+	$array_newnum = mysql_fetch_array($result_newnum);
+	$proj_num = $array_newnum['proj_num'] + 1;
+	$newnum = "<span class=\"minitext\"><br />(Next available project number automatically added.)</span>";
+} else {
+	
+	unset($newnum);
+}
+
+
 print "<form method=\"post\" action=\"index2.php\">";
 
 }
@@ -152,7 +164,7 @@ print "<div id=\"item_switch_1\">";
 print "
 <h2>Project Details</h2>
 <p class=\"minitext\">Fields marked * are required.</p>
-<p>Project Number*<br /><input type=\"text\" class=\"inputbox\" size=\"54\" name=\"proj_num\" maxlength=\"8\" value=\"$proj_num\" /></p>
+<p>Project Number*<br /><input type=\"text\" class=\"inputbox\" size=\"54\" name=\"proj_num\" maxlength=\"8\" value=\"$proj_num\" />$newnum</p>
 <p>Project Name*<br /><input type=\"text\" class=\"inputbox\" size=\"54\" name=\"proj_name\" maxlength=\"50\" value=\"$proj_name\" /></p>
 <h2>Project Address</h2>
 <p>Address Line 1<br /><input type=\"text\" class=\"inputbox\" size=\"54\" name=\"proj_address_1\" maxlength=\"50\" value=\"$proj_address_1\" /></p>
@@ -279,20 +291,12 @@ print "<input type=\"hidden\" value=\"$proj_id\" name=\"proj_id\" />";
 
 echo "</form>";
 
-echo "<div id=\"item_switch_4\">";
-
-include("inc_files/inc_project_contacts.php");
-
-print "</div>";
-
-if ($_GET[show] == "contacts") { $contacts_show = "block"; $main_show = "none"; } else { $main_show = "block"; $contacts_show = "none"; }
 
 print "
 		<script type=\"text/javascript\">
 		document.getElementById(\"item_switch_1\").style.display = \"$main_show\";
 		document.getElementById(\"item_switch_2\").style.display = \"none\";
 		document.getElementById(\"item_switch_3\").style.display = \"none\";
-		document.getElementById(\"item_switch_4\").style.display = \"$contacts_show\";
 		</script>
 ";
 

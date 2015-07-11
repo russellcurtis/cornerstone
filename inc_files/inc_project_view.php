@@ -357,11 +357,13 @@ echo "</div>";
 
 }
 
+if ($_GET[show] == "contacts") { $show_contact = "block"; $show_default = "none"; } else { $show_contact = "none"; $show_default = "block";  }
+
 print "
 		<script type=\"text/javascript\">
-		document.getElementById(\"item_switch_1\").style.display = \"block\";
+		document.getElementById(\"item_switch_1\").style.display = \"$show_default\";
 		document.getElementById(\"item_switch_2\").style.display = \"none\";
-		document.getElementById(\"item_switch_3\").style.display = \"none\";
+		document.getElementById(\"item_switch_3\").style.display = \"$show_contact\";
 		document.getElementById(\"item_switch_4\").style.display = \"none\";
 		document.getElementById(\"item_switch_8\").style.display = \"none\";
 		";

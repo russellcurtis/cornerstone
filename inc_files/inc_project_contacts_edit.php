@@ -18,7 +18,7 @@ print "<h2>Edit Project Contacts</h2>";
 echo "<form method=\"post\" action=\"index2.php?page=project_contacts&amp;proj_id=$_GET[proj_id]\">";
 } else {
 print "<h2>Add Project Contacts</h2>";
-echo "<form method=\"post\" action=\"index2.php?page=project_edit&amp;proj_id=$_GET[proj_id]&amp;status=edit&amp;show=contacts\">";
+echo "<form method=\"post\" action=\"index2.php?page=project_view&amp;proj_id=$_GET[proj_id]&amp;status=edit&amp;show=contacts\">";
 }
 
 echo "<table><tr><td colspan=\"2\">Contact Name</td></tr>";

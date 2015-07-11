@@ -131,7 +131,7 @@ $result_issued_to = mysql_query($sql_issued_to, $conn) or die(mysql_error());
 		$issue_method_list = array("Email","CD", "Post", "Basecamp", "Woobius", "Planning Portal");
 		sort($issue_method_list);
 		
-		$issue_format_list = array("PDF", "DGN", "DWG", "DXF", "Hard Copy");
+		$issue_format_list = array("PDF", "DGN", "DWG", "DXF", "Hard Copy","RVT");
 		sort($issue_method_list);
 		
 			echo "<script type=\"text/javascript\"> 

@@ -2,39 +2,8 @@
 
 if ($_GET[item] > 0 && $user_usertype_current > 2) { $item = $_GET[item]; } else { unset($item); }
 
-if ($_POST[item_id] > 0 && $_POST[item_notes] != NULL) {
-
-	$item_id = $_POST[item_id];
-	$item_notes = trim ( addslashes ($_POST[item_notes]) );
-	$sql_update = "UPDATE intranet_project_checklist_items SET item_notes = \"" . $item_notes . "\" WHERE item_id = $item_id LIMIT 1";
-	$result_update = mysql_query($sql_update, $conn) or die(mysql_error());
-	
-}
-
-if ($_GET[action] == "checklist_duplicate_item") {
-		
-		$checklist_item = intval ( $_GET[item_id] );
-		$checklist_project = intval ( $_GET[proj_id] );
-		$checklist_user = intval ( $_COOKIE[user]);
-		$checklist_timestamp = time();
-
-		$sql_duplicate = "INSERT INTO intranet_project_checklist (checklist_id, checklist_item, checklist_timestamp, checklist_project, checklist_required, checklist_date, checklist_comment, checklist_user, checklist_link) VALUES (NULL,$checklist_item,$checklist_timestamp,$checklist_project,0,0,NULL,$checklist_user,NULL)";
-		$result_update = mysql_query($sql_duplicate, $conn) or die(mysql_error());
-	
-}
-
-if ($_GET[action] == "checklist_delete_item") {
-		
-		$checklist_id = intval ( $_GET[checklist_id] );
-		$checklist_project = intval ( $_GET[proj_id] );
-
-		$sql_delete = "DELETE FROM intranet_project_checklist WHERE checklist_id = $checklist_id AND checklist_project = $checklist_project LIMIT 1";
-		echo "<p>Entry deleted.</p>";
-		$result_delete = mysql_query($sql_delete, $conn) or die(mysql_error());
-	
-}
-
 $proj_id = $_GET[proj_id];
+$showhidden = $_GET[showhidden];
 
 $sql_project = "SELECT proj_num, proj_name FROM intranet_projects WHERE proj_id = $proj_id";
 $result_project = mysql_query($sql_project, $conn) or die(mysql_error());
@@ -44,9 +13,19 @@ $proj_name = $array_project['proj_name'];
 
 echo "<h1>Project Checklist for $proj_num $proj_name</h1>";
 
-echo "<p><a href=\"pdf_project_checklist.php?proj_id=$proj_id\">Click here for PDF version <img src=\"images/button_pdf.png\" /></a></p>";
+echo "<p class=\"menu_bar\"><a href=\"pdf_project_checklist.php?proj_id=$proj_id\" class=\"menu_tab\">PDF <img src=\"images/button_pdf.png\" /></a><a href=\"index2.php?page=project_checklist_edit&amp;proj_id=$proj_id\" class=\"menu_tab\">Edit <img src=\"images/button_edit.png\" /></a>";
 
-$sql_checklist = "SELECT * FROM intranet_project_checklist_items LEFT JOIN intranet_project_checklist ON checklist_item = item_id AND checklist_project = $proj_id ORDER BY item_group, item_order, checklist_date DESC, item_name";
+if ($showhidden == "yes") {
+	echo "<a href=\"index2.php?page=project_checklist&amp;showhidden=no&amp;proj_id=$proj_id\" class=\"menu_tab\">Hide Hidden Items</a>";
+} else {
+	echo "<a href=\"index2.php?page=project_checklist&amp;showhidden=yes&amp;proj_id=$proj_id\" class=\"menu_tab\">Show Hidden Items</a>";
+}
+
+echo "</p>";
+
+if ($showhidden != "yes") { $sqlhidden = " WHERE checklist_required != 1 "; } else { unset($sqlhidden); }
+
+$sql_checklist = "SELECT * FROM intranet_project_checklist_items LEFT JOIN intranet_project_checklist ON checklist_item = item_id AND checklist_project = $proj_id $sqlhidden ORDER BY item_group, item_order, checklist_date DESC, item_name";
 
 $result_checklist = mysql_query($sql_checklist, $conn) or die(mysql_error());
 
@@ -66,15 +45,10 @@ echo "
 	
 ";
 
-if (!$item) {
-	echo "<form action=\"index2.php?page=project_checklist&amp;proj_id=$proj_id\" method=\"post\">";
-	echo "<input type=\"hidden\" name=\"action\" value=\"checklist_update\" />";
-}
-
 
 
 echo "<table>";
-echo "<tr><th>Item</th><th>Required</th><th>Date Completed</th><th>Comment</th><th colspan=\"3\">Link to File</th></tr>";
+echo "<tr><th>Item</th><th>Required</th><th style=\"width: 15%;\">Date Completed</th><th>Comment</th><th style=\"width: 15px;\"></th><th></th><th></th></tr>";
 
 $current_item = 0;
 
@@ -102,73 +76,43 @@ if (mysql_num_rows($result_checklist) > 0) {
 	
 	if ($item_group != $group) { echo "<tr><td colspan=\"7\"><strong>$item_group</strong></td></tr>"; }
 	
+		// Change the background color depending on status
+		if ($checklist_required == 2 && ( $checklist_date == "0000-00-00" OR $checklist_date == NULL ) ) { $bg =  "style=\"background: rgba(255,0,0, 0.4); \""; }
+		elseif ($checklist_required == 2 && ( $checklist_date != "0000-00-00" OR $checklist_date != NULL ) ) { $bg =  "style=\"background: rgba(0,255,0,0.4); \""; }
+		elseif ($checklist_required == 1) { $bg =  "style=\"background: rgba(200,200,200, 0.4); \""; }
+		else { $bg =  "style=\"background: rgba(255,220,0, 0.4); \""; }
 	
-	echo "<tr><td>";
+	
+	echo "<tr><td $bg>";
 	//if ($item_name_current != $item_name) { 
 	
 	echo $item_name;
-	
-	if ($checklist_id > 0) {
-		echo "<span class=\"minitext\">&nbsp;<a href=\"index2.php?page=project_checklist&amp;proj_id=$proj_id&amp;action=checklist_duplicate_item&amp;item_id=$item_id \" onclick=\"return confirm('Are you sure you want to duplicate the checklist entry for \'$item_name\'?')\">[+]</a></span>";
-	}
-	
-	// Exclude the delete button if this is the second time it appears
-	if ($current_item == $item_id) {
-		echo "<span class=\"minitext\">&nbsp;<a href=\"index2.php?page=project_checklist&amp;proj_id=$proj_id&amp;action=checklist_delete_item&amp;checklist_id=$checklist_id \" onclick=\"return confirm('Are you sure you want to delete the checklist entry for \'$item_name\'?')\"><img src=\"images/button_delete.png\" alt=\"Delete Entry\" /></a></span>";
-	}
-	//}
+
 	$item_name_current = $item_name;
 	echo "</td>";
 	
-	echo "<td>";
+	echo "<td $bg>";
 	
 	if (!$item) {
 	
-	echo "
-		<input type=\"hidden\" name=\"item_id[]\" value=\"$item_id\" />
-		<input type=\"hidden\" name=\"checklist_id[]\" value=\"$checklist_id\" />
-		<input type=\"hidden\" name=\"checklist_user[]\" value=\"$checklist_user\" />
-		<input type=\"hidden\" name=\"checklist_timestamp[]\" value=\"$checklist_timestamp\" />
-		<input type=\"hidden\" name=\"checklist_project[]\" value=\"$checklist_project\" />
-		";
-
-	
-		echo "<select name=\"checklist_required[]\">";
-		if ($checklist_required == NULL) { $checked = "selected=\"selected\""; } else { unset($checked); }
-		echo "<option value=\"0\" $checked>-</option>";
-		if ($checklist_required == 1) { $checked = "selected=\"selected\""; } else { unset($checked); }
-		echo "<option value=\"1\" $checked>No</option>";
-		if ($checklist_required == 2) { $checked = "selected=\"selected\""; } else { unset($checked); }
-		echo "<option value=\"2\" $checked>Yes</option>";
-		echo "</select>";
-	
-	} else {
-		
 		if ($checklist_required == 1) { echo "Not Required"; }
 		elseif ($checklist_required == 2) { echo "Required"; }
-		else { echo "-"; }
+		else { echo "?"; }
 	
 	}
 	
 	echo "</td>";
 
-	if (!$item) {
-		echo "<td><input name=\"checklist_date[]\" type=\"date\" value=\"$checklist_date\" /></td>";
-		echo "<td><input name=\"checklist_comment[]\" value=\"$checklist_comment\" /></td>";
-		echo "<td><input name=\"checklist_link[]\" value=\"$checklist_link\" /></td>";
-		echo "<td style=\"min-width: 20px;\">";
-			if ($checklist_link) { echo "<a href=\"$checklist_link\"><img src=\"images/button_internet.png\" /></a>"; }
-		echo "</td>";
-	} else {	
+	if (!$item) {	
 		if ($checklist_date == 0) { $checklist_date = "-";}
-		echo "<td>$checklist_date</td>";
-		echo "<td>$checklist_comment</td>";
+		echo "<td $bg>$checklist_date</td>";
+		echo "<td $bg>$checklist_comment</td>";
 		if ($checklist_link) {
-			echo "<td colspan=\"2\" style=\"min-width: 20px;\"><a href=\"$checklist_link\"><img src=\"images/button_internet.png\" /></a></td>";
+			echo "<td colspan=\"2\" $bg><a href=\"$checklist_link\" target=\"_blank\"><img src=\"images/button_internet.png\" /></a></td>";
 		} elseif ($_GET[item] == $item_id) {
-			echo "<td colspan=\"3\">-</td>";
+			echo "<td colspan=\"3\"  $bg></td>";
 		} else {
-			echo "<td colspan=\"2\">-</td>";
+			echo "<td colspan=\"2\" $bg></td>";
 		}
 	}
 
@@ -179,32 +123,16 @@ if (mysql_num_rows($result_checklist) > 0) {
 	
 		if (!$item) {
 			echo "<td><a href=\"javascript:void(0);\" onclick=\"hideRow($item_id, false);\">Help</a></td>";
-		} else {
-			echo "<td></td>";
 		}
+		
 		echo "</tr>";
 		
-		if ($_GET[item] == $item_id) { TextAreaEdit(); $item_notes = "<form action=\"index2.php?page=project_checklist&proj_id=$proj_id\" method=\"post\"><textarea style=\"width: 99%;height: 500px;\" name=\"item_notes\">$item_notes</textarea>"; }
-	
-		echo "<tr id=\"$item_id\" style=\"display: $hidden;\"><td colspan=\"6\" style=\"padding: 12px;\">$item_notes</td><td>";
-		if ($_GET[item] == $item_id) { 
-			echo "<input type=\"hidden\" name=\"item_id\" value=\"$item_id\" /><input type=\"submit\" value=\"Update\" /></form>";
-		} elseif ( $user_usertype_current > 3 ) {
-			echo "<a href=\"index2.php?page=project_checklist&amp;proj_id=$proj_id&amp;item=$item_id\"><img src=\"images/button_edit.png\" /></a>";
-		}
-		echo "</td></tr>";
+		echo "<tr id=\"$item_id\" style=\"display: $hidden;\"><td colspan=\"7\" style=\"padding: 12px; background: rgba(255,255,255,1);\">$item_notes</td>";
 		
-	} elseif ($item_id > 0 && $_GET[item] == $item_id) {
-		
-		TextAreaEdit(); echo "<tr><td colspan=\"6\"><form action=\"index2.php?page=project_checklist&proj_id=$proj_id\" method=\"post\"><textarea style=\"width: 99%;height: 500px;\" name=\"item_notes\">$item_notes</textarea></td><td><input type=\"hidden\" name=\"item_id\" value=\"$item_id\" /><input type=\"submit\" value=\"Update\" /></form></td></tr>";
+	} else { echo "<td></td>"; }
 	
-	} else { 
-	
-		echo "<td><a href=\"index2.php?page=project_checklist&amp;proj_id=$proj_id&amp;item=$item_id\">+</a></td>";
 		echo "</tr>";
-	
-	
-	}
+
 	
 	$group = $item_group;
 	
@@ -223,10 +151,6 @@ if (mysql_num_rows($result_checklist) > 0) {
 
 
 echo "</table>";
-
-echo "<input type=\"submit\" />";
-
-echo "</form>";
 
 
 

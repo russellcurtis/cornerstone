@@ -6,6 +6,7 @@ $ts_expense_id = $_POST[ts_expense_id];
 $ts_expense_project = $_POST[ts_expense_project];
 $ts_expense_value = round($_POST[ts_expense_value],2);
 $ts_expense_date = $_POST[ts_expense_date];
+$ts_expense_user = $_POST[ts_expense_user];
 
 $ts_expense_day = $_POST[ts_expense_day];
 $ts_expense_month = $_POST[ts_expense_month];
@@ -13,6 +14,7 @@ $ts_expense_year = $_POST[ts_expense_year];
 $ts_expense_vat_check = $_POST[ts_expense_vat_check];
 $vat_value_add = $_POST[vat_value_add];
 $vat_value_included = $_POST[vat_value_included];
+
 
 if ($ts_expense_vat_check == "add") {
 

@@ -126,8 +126,10 @@ print "<fieldset><legend>Details</legend><p>";
 	elseif ($ts_fee_prospect == 75) { $probable = "checked=\"checked\""; }
 	elseif($ts_fee_prospect == 100) { $definite = "checked=\"checked\""; }
 	elseif($ts_fee_prospect == 10) { $potential = "checked=\"checked\""; }
+	elseif($ts_fee_prospect == 0) { $dead = "checked=\"checked\""; }
 	else { $neutral = "checked=\"checked\""; } 
 	
+	echo "<input type=\"radio\" value=\"0\" name=\"ts_fee_prospect\" $dead />&nbsp;Dead&nbsp;";
 	echo "<input type=\"radio\" value=\"10\" name=\"ts_fee_prospect\" $potential />&nbsp;Unlikely&nbsp;";
 	echo "<input type=\"radio\" value=\"25\" name=\"ts_fee_prospect\" $possible />&nbsp;Possible&nbsp;";
 	echo "<input type=\"radio\" value=\"50\" name=\"ts_fee_prospect\" $neutral />&nbsp;Neutral&nbsp;";

@@ -18,6 +18,8 @@ if ($_GET[timestart] == NULL) { $timestart = time(); } else { $timestart = $_GET
 
 $current_time = BeginMonth($timestart,1,2);
 
+$capture_start = $current_time;
+
 $format_bg_r = "0";
 $format_bg_g = "0";
 $format_bg_b = "0";
@@ -121,7 +123,9 @@ $pdf->addPage(L);
 	
 	}
 	
-	function Datum($start,$duration,$color_array) {
+
+	
+		function Datum($start,$duration,$color_array) {
 		
 			GLOBAL $current_time;
 			GLOBAL $pdf;
@@ -133,7 +137,7 @@ $pdf->addPage(L);
 			$pdf->SetY($y);
 			$pdf->SetX(50);
 			
-			$pdf->SetLineWidth(0.5);
+			$pdf->SetLineWidth(0.3);
 			
 			$datum_start = BeginWeek(AssessDays($start));
 			if ($datum_start < $current_time) { $duration = $duration - ($current_time - $datum_start); }
@@ -166,21 +170,45 @@ $pdf->addPage(L);
 
 	$pdf->SetY(10);
 	$pdf->SetFont('Helvetica','b',14);
+	
+	if (date ("n",$timestart) < 4) { $quarter = "Q1"; }
+	elseif (date ("n",$timestart) < 7) { $quarter = "Q2"; }
+	elseif (date ("n",$timestart) < 10) { $quarter = "Q3"; }
+	else { $quarter = "Q4"; }
+	$quarter = $quarter . " " . date ("Y",$timestart);
 
-	$sheet_title = "Project Resourcing, " . TimeFormat(time());
+	$sheet_title = "Project Resourcing, " . $quarter;
 	$pdf->SetTextColor($format_bg_r, $format_bg_g, $format_bg_b);
-	$pdf->Cell(0,10,$sheet_title);
+	$pdf->Cell(169.5,10,$sheet_title,0,0);
+	$pdf->SetFont('Helvetica','',8);
+	$prev_month = $timestart - 7889184;
+	$next_month = $timestart + 7889184;
+	$prev_month = $_SERVER['HTTP_HOST'] . "/pdf_resourcing.php?timestart=$prev_month";
+	$this_month = $_SERVER['HTTP_HOST'] . "/pdf_resourcing.php";
+	$next_month = $_SERVER['HTTP_HOST'] . "/pdf_resourcing.php?timestart=$next_month";
+
+	$print_date = "Date: " . date ("r",time());
+	$pdf->Cell(25,4,$print_date,0,0,R,0);
+	$pdf->SetTextColor(200, 200, 200);
+	$pdf->SetDrawColor(200, 200, 200);
+	$pdf->Cell(2.5,4,'',0,0,C,0);
+	$pdf->Cell(25,4,'Previous quarter',1,0,C,0,$prev_month);
+	$pdf->Cell(2.5,4,'',0,0,C,0);
+	$pdf->Cell(25,4,'This quarter',1,0,C,0,$this_month);
+	$pdf->Cell(2.5,4,'',0,0,C,0);
+	$pdf->Cell(25,4,'Next quarter',1,1,C,0,$next_month);
+	
 
 	$pdf->SetTextColor(0, 0, 0);
 	$pdf->SetY(50);
 	$pdf->SetFont('Helvetica','b',18);
-	
-	
+		
 DrawGrid();
 
 // Begin listing the projects
 
-	$sql_proj = "SELECT * FROM intranet_projects, intranet_timesheet_fees WHERE ts_fee_project = proj_id AND proj_active = 1 AND proj_fee_track = 1 AND ts_fee_value > 0 ORDER BY proj_num, ts_fee_commence";
+	//$sql_proj = "SELECT * FROM intranet_projects, intranet_timesheet_fees WHERE ts_fee_project = proj_id AND proj_active = 1 AND proj_fee_track = 1 AND ts_fee_value > 0 ORDER BY proj_num, ts_fee_commence";
+	$sql_proj = "SELECT * FROM intranet_projects, intranet_timesheet_fees WHERE ts_fee_project = proj_id AND proj_fee_track = 1 AND ts_fee_prospect > 0 AND ts_fee_value > 0 AND (((UNIX_TIMESTAMP(ts_fee_commence) + ts_fee_time_end) > $capture_start) OR ((UNIX_TIMESTAMP(ts_datum_commence) + ts_datum_length) > $capture_start)) ORDER BY proj_num, ts_fee_commence";
 	$result_proj = mysql_query($sql_proj, $conn) or die(mysql_error());
 	
 	$pdf->SetFont('Helvetica','',7);
@@ -242,7 +270,7 @@ DrawGrid();
 			$arraycount = ($stage_start / $colwidth);
 			if ($pdf->GetX() < 280 & $stage_start < 230) {
 				while ($count < $stage_width && $x < 280) {
-					if ($ts_fee_pre > 0 && $count == 0 && $noborder == 0) { $pdf->SetDrawColor(150); $pdf->SetLineWidth(1); $border = ""; } else { $pdf->SetLineWidth(0.2); $border = 0; }
+					//if ($ts_fee_pre > 0 && $count == 0 && $noborder == 0) { $pdf->SetDrawColor(150); $pdf->SetLineWidth(1); $border = ""; } else { $pdf->SetLineWidth(0.2); $border = 0; }
 					$pdf->Cell($colwidth,$rowheight,$fee_weekly_print,$border,0,R,true);
 					$count = $count + $colwidth;
 					$x = $pdf->GetX();
@@ -255,8 +283,10 @@ DrawGrid();
 				$pdf->Cell(0,0,'',0,1,L);
 			}
 			$pdf->Cell(0,$rowheight,'',0,1,L);
-			if ((BeginWeek(AssessDays($ts_datum_commence)) + $ts_datum_length) < $ts_fee_conclude) { $color_array = array(255,0,0); } else { unset($color_array); }
+			//if ((BeginWeek(AssessDays($ts_datum_commence)) + $ts_datum_length) < $ts_fee_conclude) { $color_array = array(255,0,0); } else { unset($color_array); }
+			if (($array_proj['ts_fee_commence'] !=  $array_proj['ts_datum_commence']) OR ($array_proj['ts_fee_time_end'] > $array_proj['ts_datum_length'])) { $color_array = array(225,0,0); } else { unset($color_array); }
 			Datum($ts_datum_commence,$ts_datum_length,$color_array);
+			$pdf->Cell(0,1,'',0,1,L);
 		}
 		
 		
@@ -265,6 +295,9 @@ DrawGrid();
 		if ($pdf->GetY() > 170) { $pdf->addPage(L); DrawGrid(); }
 		
 	}
+	
+	$pdf->addPage(L);
+	DrawGrid();
 	
 	// Now add the totals at the end
 	
@@ -323,7 +356,7 @@ DrawGrid();
 			GLOBAL $conn;
 			$start = $time;
 			$end = $time + 604800;
-			$sql_staff = "SELECT user_timesheet_hours, user_user_rate, user_prop, user_prop_target FROM intranet_user_details WHERE user_user_added < $start AND ( user_user_ended > $start OR user_user_ended IS NULL OR user_user_ended = 0 ) AND user_active = 1";
+			$sql_staff = "SELECT user_timesheet_hours, user_user_rate, user_prop, user_prop_target FROM intranet_user_details WHERE user_user_added < $start AND ( user_user_ended > $start OR user_user_ended IS NULL OR user_user_ended = 0 ) OR (user_user_added < $start AND user_user_ended > $start)";
 			$result_staff = mysql_query($sql_staff, $conn) or die(mysql_error());
 			$weekly_cost = 0;
 			while ($array_staff = mysql_fetch_array($result_staff)) {
@@ -389,9 +422,9 @@ DrawGrid();
 		
 	// Fees minus costs
 	
-		$pdf->SetFont('Helvetica','B',8);
+		$pdf->SetFont('Helvetica','B',6);
 		$pdf->Cell(0,5,'',0,1,L);
-		$pdf->Cell(40,5,"DIFFERENCE (ACTUAL)",0,0,L);
+		$pdf->Cell(40,5,"Surplus",0,0,L);
 		$pdf->SetFont('Helvetica','',6);
 		$arrayname = 0;
 		$weekdiff_array = array();
@@ -401,7 +434,7 @@ DrawGrid();
 			$weekdiff_array[] = $weekdiff;
 			if ($weekdiff < 0) { $pdf->SetTextColor(255,0,0); } else { $pdf->SetTextColor(0,0,0); }
 			$total = "£" . number_format ( $weekdiff );
-			$pdf->Cell($colwidth,3,$total,0,0,R);
+			$pdf->Cell($colwidth,5,$total,0,0,R);
 			$arrayname++;
 		}
 		
@@ -415,13 +448,13 @@ DrawGrid();
 		$pdf->SetTextColor(0);
 		$pdf->SetFont('Helvetica','B',6);
 		$pdf->Cell(0,5,'',0,1,L);
-		$pdf->Cell(40,5,"Gross Profit",0,0,L);
+		$pdf->Cell(40,5,"Target Profit",0,0,L);
 		$pdf->SetFont('Helvetica','',6);
 		$counter = 0;
 		while ($x <= 220) {
 			$x = $x + $colwidth;
 			$total = "£" . number_format ( $array_profit[$counter] - $array_total[$counter] );
-			$pdf->Cell($colwidth,3,$total,0,0,R);
+			$pdf->Cell($colwidth,5,$total,0,0,R);
 			$counter++;
 		}
 
@@ -433,10 +466,10 @@ DrawGrid();
 		
 		// Net Profit
 		$pdf->SetTextColor(0);
-		$pdf->SetFont('Helvetica','B',6);
+		$pdf->SetFont('Helvetica','B',8);
 		$pdf->Cell(0,5,'',0,1,L);
-		$pdf->Cell(40,5,"Net Profit",0,0,L);
-		$pdf->SetFont('Helvetica','',6);
+		$pdf->Cell(40,5,"Target + Surplus Profit",0,0,L);
+		$pdf->SetFont('Helvetica','B',6);
 		$counter = 0;
 		$array_netprofit = array();
 		while ($x <= 220) {
@@ -445,12 +478,100 @@ DrawGrid();
 			$array_netprofit[] = $total;
 			if ($total < 0) { $pdf->SetTextColor(255,0,0); } else { $pdf->SetTextColor(0,0,0); }
 			$total = "£" . number_format ( $total ) ;
-			$pdf->Cell($colwidth,3,$total,0,0,R);
+			$pdf->Cell($colwidth,5,$total,0,0,R);
 			$counter++;
 		}
 		
 		
-	// Now attempt a graph
+		// List all of the upcoming holidays for each person
+		
+		$start = $time;
+		
+		$x = 10;
+		$y = $pdf->GetY() + 15;
+		$pdf->SetXY($x,$y);
+		
+function CheckHols($date, $user_id, $start) {
+	
+	GLOBAL $conn;
+
+				$sql_days = "SELECT holiday_datestamp FROM intranet_user_holidays WHERE holiday_user = $user_id AND holiday_timestamp > $start ORDER BY holiday_timestamp";
+				$result_days = mysql_query($sql_days, $conn) or die(mysql_error());				
+				$array_print = array();
+				
+				while ($array_days = mysql_fetch_array($result_days)) {
+					
+					$array_print[] = $array_days['holiday_datestamp'];					
+					
+				}
+				
+		if (in_array($date,$array_print)) { return "yes"; }
+
+}
+		
+
+		
+		$sql_holidays = "SELECT user_name_first, user_name_second, user_id, user_user_added, user_user_ended FROM intranet_user_details WHERE ( user_user_ended > $current_time OR user_user_ended IS NULL OR user_user_ended = 0 ) OR (user_user_added < $current_time AND user_user_ended > $start) ORDER BY user_name_second, user_name_first";
+			$result_holidays = mysql_query($sql_holidays, $conn) or die(mysql_error());
+			
+			$day_width = $colwidth / 5;
+			
+			$pdf->SetFont('Helvetica','B',8);
+			$pdf->SetTextColor(0);
+			$pdf->Cell(0,5,"Holidays",0,1,L);
+				
+			while ($array_holidays = mysql_fetch_array($result_holidays)) {
+				$user_name_first = $array_holidays['user_name_first'];
+				$user_name_second = $array_holidays['user_name_second'];
+				$user_id = $array_holidays['user_id'];
+				$user_user_added = $array_holidays['user_user_added'];
+				$user_user_ended = $array_holidays['user_user_ended'];
+				$user_name = $user_name_first . " " . $user_name_second;
+				
+				$user_start = $current_time + 43200;
+				
+				$pdf->SetFont('Helvetica','',3);
+				
+				$pdf->SetTextColor(0);
+				$pdf->SetFont('Helvetica','B',6);
+				$pdf->Cell(40,5,$user_name,0,0,L);
+				
+				$sql_days = "SELECT holiday_datestamp FROM intranet_user_holidays WHERE holiday_user = $user_id ORDER BY holiday_timestamp";
+				$result_days = mysql_query($sql_days, $conn) or die(mysql_error());
+				$array_days = mysql_fetch_array($result_days);
+				$print_array = print_r($array_days, true);		
+				while ($pdf->GetX() < 280) {
+					
+					
+					
+					$date = date ("Y-m-d",$user_start);
+					if (CheckHols($date,$user_id,$current_time) == "yes") { $pdf->SetFillColor(220); } else { $pdf->SetFillColor(175); }
+					if ($user_user_added >= $user_start) { $pdf->SetFillColor(255); } elseif ($user_user_ended <= $user_start && $user_user_ended > 0) { $pdf->SetFillColor(255); }
+					if (date("N",$user_start) < 6) {
+						$print_cell = date("j",$user_start);
+						$pdf->Cell($day_width,5,'',L,0,L,1);
+					}
+					$user_start = $user_start + 86400;
+					
+				}
+				
+				
+				
+				$pdf->Cell(0,5,'',0,1);
+				
+				$pdf->SetX(10);
+				
+				
+		
+		
+		
+		
+		
+			}
+		
+		
+		
+	// Now let's  attempt a graph
 	
 	if ($pdf->GetY() > 150) { $pdf->addPage(L); DrawGrid(); }
 	

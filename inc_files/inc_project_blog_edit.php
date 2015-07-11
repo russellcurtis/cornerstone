@@ -114,6 +114,8 @@ print "<input type=\"hidden\" value=\"$blog_id\" name=\"blog_id\" />";
 
 }
 
+TextAreaEdit();
+
 print "
 <h3>Entry</h3><p><textarea name=\"blog_text\" rows=\"12\" cols=\"48\">".$blog_text."</textarea></p>
 <p>Viewable only to me?&nbsp;<input type=\"checkbox\" name=\"blog_view\" value=\"1\"";

@@ -33,6 +33,16 @@ echo "<li><a href=\"index2.php?page=holiday_approval\">Holiday Calendar</a></li>
 print "</ul>";
 }
 
+if ($module_qms == "1") {
+print "<h1 class=\"heading_side\">Quality Management</h1>";
+print "<ul class=\"button_left\">";
+echo "<li><a href=\"index2.php?page=qms_view\">View QMS</a>&nbsp;<a href=\"pdf_qms.php\"><img src=\"images/button_pdf.png\" alt=\"PDF Version of QMS\" /></a></li>";
+if ($user_usertype_current > 4) { 
+	echo "<li><a href=\"index2.php?page=qms_edit\">Edit QMS</a></li>";
+}
+print "</ul>";
+}
+
 if ($module_timesheets == "1") {
 print "<h1 class=\"heading_side\">Timesheets</h1>";
 print "<ul class=\"button_left\">";
@@ -49,9 +59,12 @@ print "</ul>";
 }
 
 if ($module_invoices == "1") {
-print "<h1 class=\"heading_side\">Invoices</h1>";
+
+
+if ($user_usertype_current > 3) { print "<h1 class=\"heading_side\">Invoices</h1>"; print "<ul class=\"button_left\">"; print "<li><a href=\"index2.php?page=timesheet_invoice\">Invoices</a></li></ul>"; }
+
+print "<h1 class=\"heading_side\">Expenses</h1>";
 print "<ul class=\"button_left\">";
-if ($user_usertype_current > 3) { print "<li><a href=\"index2.php?page=timesheet_invoice\">Invoices</a></li>"; }
 print "<li><a href=\"index2.php?page=timesheet_expense_edit\">Add Expenses</a>&nbsp;<a href=\"popup_expenses.php\">[Quick Add]</a></li>";
 print "<li><a href=\"index2.php?page=timesheet_expense_list&amp;user_id=$user_id_current\">List My Expenses</a>";
 

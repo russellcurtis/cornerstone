@@ -1,10 +1,10 @@
 <?php
 
 echo "<h1 class=\"heading_side\">Internet Feed</h1>";
-echo "<ul class=\"button_left\"><li><a href=\"http://intranet.rcka.co.uk/index2.php?page=feeds\">Internet Feeds</a></li></ul>";
+echo "<ul class=\"button_left\"><li><a href=\"index2.php?page=feeds\">Internet Feeds</a></li></ul>";
 
 echo "<h1 class=\"heading_side\">Journal</h1>";
-echo "<ul class=\"button_left\"><li><a href=\"http://intranet.rcka.co.uk/index2.php?page=project_blog_edit\">Add Journal Entry</a></li></ul>";
+echo "<ul class=\"button_left\"><li><a href=\"index2.php?page=project_blog_edit&amp;status=add\">Add Journal Entry</a></li></ul>";
 
 include_once("inc_files/inc_menu_search.php");
 

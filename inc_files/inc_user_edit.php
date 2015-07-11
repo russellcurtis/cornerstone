@@ -127,6 +127,14 @@ if ($user_id != NULL) {
 		
 	echo "</fieldset>";
 	
+	echo "<fieldset><legend>Password</legend>";
+	
+		echo "<p><input type=\"checkbox\" name=\"update_user_password\" value=\"yes\" />&nbsp;Update Password?</p>";
+		
+		echo "<p>Enter New Password<br /><input type=\"password\" name=\"user_password\" value=\"\" /></p>";
+		
+	echo "</fieldset>";
+	
 	if ($user_id > NULL) {
 	echo "<input type=\"hidden\" name=\"action\" value=\"user_update\" />";
 	echo "<input type=\"hidden\" name=\"user_id\" value=\"$user_id\" />";

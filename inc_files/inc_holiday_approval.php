@@ -132,16 +132,18 @@ $year = date ("Y", time());
 	
 	
 
-echo "<h2>Holidays in $year</h2>";
+echo "<h2 id=\"holidaysthisyear\">Holidays in $year</h2>";
 
-$sql_users = "SELECT * FROM intranet_user_details WHERE user_active = 1 ORDER BY user_name_second";
+if ($user_usertype_current < 3) { $limit = "AND user_id = $user_id"; } else { unset( $limit );}
+
+$sql_users = "SELECT * FROM intranet_user_details WHERE ((user_user_ended > $beginnning_of_this_year) OR (user_user_ended = 0) OR (user_user_ended = NULL)) $limit ORDER BY user_name_second";
 
 
 $result_users = mysql_query($sql_users, $conn);
 echo "<table>";
 
-echo "<tr><th colspan=\"4\">User Details</th><th colspan=\"4\">$year Only</th><th colspan=\"2\">All Time</th></tr>";
-echo "<tr><th>Name</th><th>Date Started</th><th>Annual Allowance</th><th>Total Allowance</th><th>Allowance</th><th>Paid Holiday</th><th>Unpaid Holiday</th><th>Year Total</th><th>Holiday Taken</th><th>Holiday Remaining to end of $year</th></tr>";
+echo "<tr><th colspan=\"6\">User Details</th><th colspan=\"4\">$year Only</th><th colspan=\"2\">All Time</th></tr>";
+echo "<tr><th>Name</th><th>Date Started</th><th>Until</th><th>Years</th><th>Annual Allowance</th><th>Total Allowance</th><th>Allowance</th><th>Paid Holiday</th><th>Unpaid Holiday</th><th>Year Total</th><th>Holiday Taken</th><th>Holiday Remaining to end of $year</th></tr>";
 
 while ($array_users = mysql_fetch_array($result_users)) {
 
@@ -157,10 +159,10 @@ while ($array_users = mysql_fetch_array($result_users)) {
 	$user_user_added = $array_users['user_user_added'];
 	if ($user_user_added == NULL OR $user_user_added < $holiday_datum ) { $user_user_added = $holiday_datum; }
 	$user_user_ended = $array_users['user_user_ended'];
-	if ($user_user_ended == NULL) { $user_user_ended = mktime(0,0,0,1,1,$nextyear); }
+	if ($user_user_ended == NULL OR $user_user_ended == 0) { $user_user_ended = mktime(0,0,0,1,1,$nextyear); }
 	
 	$holiday_allowance = $user_user_ended - $user_user_added;
-	$yearlength = 365.25 * 24 * 60 * 60;
+	$yearlength = 365.242 * 24 * 60 * 60;
 	$holiday_allowance = ( $holiday_allowance / $yearlength ) * $user_holidays;
 	$holiday_allowance = round($holiday_allowance);
 	
@@ -171,7 +173,7 @@ while ($array_users = mysql_fetch_array($result_users)) {
 	$holiday_unpaid = 0;
 	$holiday_total = 0;
 	$holiday_total_year = 0;
-
+	
 	$sql_count = "SELECT * FROM intranet_user_holidays WHERE holiday_user = $user_id AND holiday_year <= $year AND holiday_timestamp > $user_user_added ORDER BY holiday_timestamp";
 	$result_count = mysql_query($sql_count, $conn);
 	while ($array_count = mysql_fetch_array($result_count)) {
@@ -202,8 +204,48 @@ while ($array_users = mysql_fetch_array($result_users)) {
 		}
 		
 	$holiday_remaining = $holiday_allowance - $holiday_total;
+	
+	$length =  round((($user_user_ended - $user_user_added) / 31556908.8), 2); 
 		
-	echo "<tr><td>$user_name_first $user_name_second</td><td>" . date ( "d M Y", $user_user_added ) . "</td><td style=\"text-align:right;\">$user_holidays</td><td style=\"text-align:right;\">$holiday_allowance</td><td style=\"text-align:right;\">$year_allowance</td><td style=\"text-align:right;\">$holiday_paid_total</td><td style=\"text-align:right;\">$holiday_unpaid</td><td style=\"text-align:right;\">$holiday_total_year</td><td style=\"text-align:right;\">$holiday_total</td><td style=\"text-align:right;\">$holiday_remaining</td></tr>";
+	echo "
+	<tr>
+	<td><a href=\"index2.php?page=holiday_approval&amp;showuser=$user_id#holidaysthisyear\">$user_name_first $user_name_second</a></td>
+	<td>" . date ( "d M Y", $user_user_added ) . "</td>
+	<td>" . date ( "d M Y", $user_user_ended ) . "</td>
+	<td>$length</td>
+	<td style=\"text-align:right;\">$user_holidays</td>
+	<td style=\"text-align:right;\">$holiday_allowance</td>
+	<td style=\"text-align:right;\">$year_allowance</td>
+	<td style=\"text-align:right;\">$holiday_paid_total</td>
+	<td style=\"text-align:right;\">$holiday_unpaid</td>
+	<td style=\"text-align:right;\">$holiday_total_year</td>
+	<td style=\"text-align:right;\">$holiday_total</td>
+	<td style=\"text-align:right;\">$holiday_remaining</td>
+	</tr>";
+	
+	if ($_GET[showuser] == $user_id) {
+		
+			$sql_totalhols = "SELECT holiday_timestamp, holiday_length FROM intranet_user_holidays WHERE holiday_user = $user_id AND holiday_paid = 1 ORDER BY holiday_timestamp";
+			$result_totalhols = mysql_query($sql_totalhols, $conn);
+
+				if (mysql_num_rows($result_totalhols) > 0) {
+					
+					
+						$totalhols_count = 0;
+					
+						while ($array_totalhols = mysql_fetch_array($result_totalhols)) {
+							
+							$totalhols_count = $totalhols_count + $array_totalhols['holiday_length'];
+						
+							echo "<tr><td></td><td colspan=\"4\">" . date ( "l, j F Y", $array_totalhols['holiday_timestamp'] ) . "</td><td colspan=\"7\">$totalhols_count</td></tr>";
+						
+						}
+					
+					
+				}
+		
+		
+	}
 
 
 }

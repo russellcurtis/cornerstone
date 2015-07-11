@@ -1,8 +1,6 @@
 <?php
 
-echo "<h1>Test</h1>"
-
-//include("inc_files/inc_checkcookie.php");
+include("inc_files/inc_checkcookie.php");
 
 /***************************************************************************
 

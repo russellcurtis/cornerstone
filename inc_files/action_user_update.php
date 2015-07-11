@@ -3,6 +3,13 @@
 if ($_POST[user_id] != "") { $user_id = $_POST[user_id]; }
 else { $user_id = ""; }
 
+	if ($_GET[update_user_password] == "yes") {
+			$user_password = md5($_GET[user_password]);
+			$update_password = ", user_password = '$user_password', ";
+	} else {
+			unset($update_password);		
+	}
+
 	$user_user_added = AssessDays($_POST[user_user_added],8);
 	$user_user_ended = AssessDays($_POST[user_user_ended],18);
 
@@ -30,6 +37,7 @@ else { $user_id = ""; }
 	user_initials = '$_POST[user_initials]',
 	user_prop_target = '$_POST[user_prop_target]',
 	user_user_timesheet = '$_POST[user_user_timesheet]'
+	$update_password
 	WHERE user_id = '$user_id' LIMIT 1";
 	
 	

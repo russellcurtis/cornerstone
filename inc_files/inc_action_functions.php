@@ -30,6 +30,7 @@ function CleanUp($input) {
 	// $input = str_replace($removestrings_all, "", $input);
 	$input = strip_tags($input);
 	$input = trim($input);
+	$input = addslashes($input);
 	// $input = str_replace($currency_junk,$currency_text,$input);
 	return($input);
 }
@@ -606,9 +607,9 @@ function TextAreaEdit() {
 					menubar: false,
 					toolbar: \"undo redo | bold italic underline strikethrough | bullist numlist outdent indent | link unlink | image \",
 					autosave_ask_before_unload: false,
-					max_height: 200,
-					min_height: 160,
-					height : 180
+					height : 300,
+					max_height: 1000,
+					min_height: 160
 				});
 				</script>";
 

@@ -156,7 +156,15 @@ function Recipients($x,$y) {
 
 				// How many recipients?
 
-				$sql_recipients = "SELECT contact_id, contact_namefirst, contact_namesecond, company_name FROM contacts_contactlist, contacts_disciplinelist, intranet_drawings_issued LEFT JOIN contacts_companylist ON issue_company = company_id WHERE issue_project = $proj_id AND issue_contact = contact_id AND contact_discipline = discipline_id GROUP BY issue_contact ORDER BY discipline_order, company_name, contact_namesecond";
+				$sql_recipients = "
+				SELECT contact_id, contact_namefirst, contact_namesecond, company_name
+FROM contacts_contactlist,  intranet_drawings_issued
+INNER JOIN contacts_companylist
+ON company_id = issue_company
+WHERE issue_project = $proj_id
+AND issue_contact = contact_id
+GROUP BY contact_id
+ORDER BY contact_namesecond";
 				$result_recipients = mysql_query($sql_recipients, $conn) or die(mysql_error());
 				$recipients = mysql_num_rows($result_recipients);
 				
@@ -180,6 +188,9 @@ function Recipients($x,$y) {
 				$contact_namesecond = $array_recipients['contact_namesecond'];
 				$company_name = $array_recipients['company_name'];
 				$contact_name = $contact_namefirst . " " . $contact_namesecond;
+				
+				$company_name = str_replace("&amp;","&",$company_name);
+				
 				$pdf->SetFont($format_font,'',6);
 				$pdf->Cell(35,5,$contact_name,LT,0);
 				$pdf->Cell(45,5,$company_name,LT,0);
