@@ -28,6 +28,7 @@ if ($user_id != NULL) {
 	$user_username = $array['user_username'];
 	$user_user_rate = $array['user_user_rate'];
 	$user_user_added = $array['user_user_added'];
+	$user_user_ended = $array['user_user_ended'];
 	$user_user_timesheet = $array['user_user_timesheet'];
 	$user_holidays = $array['user_holidays'];
 	$user_initials = $array['user_initials'];
@@ -51,7 +52,7 @@ if ($user_id != NULL) {
 		
 	echo "</fieldset>";
 	
-	echo "<fieldset><legend>Address</legend>";
+	echo "<fieldset><legend>Home Address</legend>";
 	
 		echo "<p>Address<br /><input type=\"text\" name=\"user_address_1\" value=\"$user_address_1\" maxlength=\"50\" size=\"32\" /><br />";
 		echo "<input type=\"text\" name=\"user_address_2\" value=\"$user_address_2\" maxlength=\"50\" size=\"32\" /><br />";
@@ -71,7 +72,7 @@ if ($user_id != NULL) {
 		
 	echo "</fieldset>";
 	
-	if ($user_usertype_current > 2) {
+	if ($user_usertype_current > 3) {
 	
 		echo "<fieldset><legend>Details</legend>";
 		echo "<p>User Type<br /><input type=\"text\" name=\"user_usertype\" value=\"$user_usertype\" maxlength=\"2\" size=\"32\" /></p>";
@@ -109,7 +110,7 @@ if ($user_id != NULL) {
 		echo "</select></p>";
 		echo "</fieldset>";
 	
-	}
+
 	
 	echo "<fieldset><legend>Dates</legend>";
 		
@@ -145,6 +146,8 @@ if ($user_id != NULL) {
 	}
 	
 	echo "</form></p>";
+	
+	}
 	
 } 
 

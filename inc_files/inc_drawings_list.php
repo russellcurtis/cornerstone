@@ -2,6 +2,8 @@
 
 if ($_GET[proj_id] != NULL) { $proj_id = CleanUp($_GET[proj_id]); } elseif ($_POST[proj_id] != NULL) { $proj_id = CleanUp($_POST[proj_id]); }
 
+
+
 $sql_project = "SELECT proj_num, proj_name FROM intranet_projects WHERE proj_id = $proj_id LIMIT 1";
 $result_project = mysql_query($sql_project, $conn) or die(mysql_error());
 $array_project = mysql_fetch_array($result_project);
@@ -17,8 +19,53 @@ if ($proj_id == NULL) {
 	echo"<p>No project selected.</p>";
 
 } else {
+	
+	
+	
+	
+	
+	
 
-$sql = "SELECT * FROM intranet_drawings, intranet_drawings_scale, intranet_drawings_paper WHERE drawing_project = $proj_id AND drawing_scale = scale_id AND drawing_paper = paper_id order by drawing_number";
+	
+	function ClassList($array_class_1,$array_class_2,$type) {
+	GLOBAL $proj_id;
+	GLOBAL $drawing_class;
+	GLOBAL $drawing_type;
+	
+	echo "<select name=\"$type\" onchange=\"this.form.submit()\">";
+	$array_class_count = 0;
+	foreach ($array_class_1 AS $class) {
+		echo "<option value=\"$class\"";
+		
+		if ($drawing_class == $class && $type == "drawing_class" ) { echo " selected=\"selected\" "; }
+		elseif ($drawing_type == $class && $type == "drawing_type" ) { echo " selected=\"selected\" "; }
+		
+		echo ">";		
+		echo $array_class_2[$array_class_count];
+		echo "</option>";
+		$array_class_count++;
+		}
+		echo "</select>";
+		
+	}
+	
+	$drawing_class = $_POST[drawing_class];
+	$drawing_type = $_POST[drawing_type];
+	echo "<form method=\"post\" action=\"index2.php?page=drawings_list&amp;proj_id=$proj_id&amp;drawing_class=$drawing_class&amp;drawing_type=$drawing_type\" >";
+	$array_class_1 = array("","SK","PL","TD","CN","CT","FD");
+	$array_class_2 = array("- All -","Sketch","Planning","Tender","Contract","Construction","Final Design");
+	echo "<p>Filter: ";
+	ClassList($array_class_1,$array_class_2,"drawing_class");
+	echo "&nbsp;";
+	$array_class_1 = array("","SV","ST","GA","AS","DE","DOC");
+	$array_class_2 = array("- All -","Survey","Site Location","General Arrangement","Assembly","Detail","Document");
+	ClassList($array_class_1,$array_class_2,"drawing_type");
+	echo "</p></form>";
+	
+	if ($drawing_class != NULL) { $drawing_class = " AND drawing_number LIKE '%-$drawing_class-%' "; } else { unset($drawing_class); }
+	if ($drawing_type != NULL) { $drawing_type = " AND drawing_number LIKE '%-$drawing_type-%' "; } else { unset($drawing_type); }
+
+$sql = "SELECT * FROM intranet_drawings, intranet_drawings_scale, intranet_drawings_paper WHERE drawing_project = $proj_id AND drawing_scale = scale_id AND drawing_paper = paper_id $drawing_class $drawing_type order by drawing_number";
 $result = mysql_query($sql, $conn) or die(mysql_error());
 
 
@@ -63,7 +110,7 @@ $result = mysql_query($sql, $conn) or die(mysql_error());
 
 		} else {
 
-		print "<p>There are no drawings for this project.</p>";
+		print "<p>No drawings found.</p>";
 
 		}
 	

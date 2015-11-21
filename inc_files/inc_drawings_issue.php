@@ -14,8 +14,51 @@ if ($_GET[drawing_packages] != NULL) {
 	} else {
 		unset($sql_drawing_packages);
 	}
+	
+	
+		function ClassList($array_class_1,$array_class_2,$type) {
+	GLOBAL $proj_id;
+	GLOBAL $drawing_class;
+	GLOBAL $drawing_type;
+	
+	echo "<select name=\"$type\" onchange=\"this.form.submit()\">";
+	$array_class_count = 0;
+	foreach ($array_class_1 AS $class) {
+		echo "<option value=\"$class\"";
+		
+		if ($drawing_class == $class && $type == "drawing_class" ) { echo " selected=\"selected\" "; }
+		elseif ($drawing_type == $class && $type == "drawing_type" ) { echo " selected=\"selected\" "; }
+		
+		echo ">";		
+		echo $array_class_2[$array_class_count];
+		echo "</option>";
+		$array_class_count++;
+		}
+		echo "</select>";
+		
+	}
+	
+	
+		$drawing_class = $_POST[drawing_class];
+	$drawing_type = $_POST[drawing_type];
+	echo "<form method=\"post\" action=\"index2.php?page=drawings_issue&amp;proj_id=$proj_id&amp;drawing_class=$drawing_class&amp;drawing_type=$drawing_type\" >";
+	$array_class_1 = array("","SK","PL","TD","CN","CT","FD");
+	$array_class_2 = array("- All -","Sketch","Planning","Tender","Contract","Construction","Final Design");
+	echo "<p>Filter: ";
+	ClassList($array_class_1,$array_class_2,"drawing_class");
+	echo "&nbsp;";
+	$array_class_1 = array("","SV","ST","GA","AS","DE","DOC");
+	$array_class_2 = array("- All -","Survey","Site Location","General Arrangement","Assembly","Detail","Document");
+	ClassList($array_class_1,$array_class_2,"drawing_type");
+	echo "<br /><span class=\"minitext\">(Note that changing these filters will clear anything you have selected below.)</span></p></form>";
+	
+	if ($drawing_class != NULL) { $drawing_class = " AND drawing_number LIKE '%-$drawing_class-%' "; } else { unset($drawing_class); }
+	if ($drawing_type != NULL) { $drawing_type = " AND drawing_number LIKE '%-$drawing_type-%' "; } else { unset($drawing_type); }	
+	
+	
+	
 
-$sql = "SELECT * FROM intranet_drawings, intranet_drawings_scale, intranet_drawings_paper, intranet_projects WHERE proj_id = '$proj_id' AND drawing_project = '$_GET[proj_id]' AND drawing_scale = scale_id AND drawing_paper = paper_id " . $sql_drawing_packages . " ORDER BY drawing_number";
+$sql = "SELECT * FROM intranet_drawings, intranet_drawings_scale, intranet_drawings_paper, intranet_projects WHERE proj_id = '$proj_id' AND drawing_project = '$_GET[proj_id]' AND drawing_scale = scale_id AND drawing_paper = paper_id " . $sql_drawing_packages . " $drawing_class $drawing_type ORDER BY drawing_number";
 $result = mysql_query($sql, $conn) or die(mysql_error());
 		
 

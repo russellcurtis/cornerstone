@@ -138,7 +138,7 @@ array_push($array_projects_recent,$array_timesheet_projects['ts_project']);
 
 // Get the list of projects from the database
 
-$sql = "SELECT * FROM intranet_user_details, intranet_projects LEFT JOIN intranet_timesheet_fees ON `proj_riba` = `ts_fee_id` WHERE proj_rep_black = user_id $project_active order by proj_num";
+$sql = "SELECT *, UNIX_TIMESTAMP(ts_fee_commence) FROM intranet_user_details, intranet_projects LEFT JOIN intranet_timesheet_fees ON `proj_riba` = `ts_fee_id` WHERE proj_rep_black = user_id $project_active order by proj_num";
 
 $result = mysql_query($sql, $conn) or die(mysql_error());
 
@@ -204,6 +204,8 @@ $result = mysql_query($sql, $conn) or die(mysql_error());
 		$ts_fee_id = $array['ts_fee_id'];
 		$ts_fee_target = $array['ts_fee_target'];
 		$ts_fee_value = $array['ts_fee_value'];
+		$ts_fee_time_begin = $array['UNIX_TIMESTAMP(ts_fee_commence)'];
+		$ts_fee_time_end = $array['ts_fee_time_end'];
 		$proj_riba = $array['proj_riba'];
 		
 		// This has been added since the last update
@@ -243,15 +245,23 @@ $result = mysql_query($sql, $conn) or die(mysql_error());
 											// Project Stage
 											
 											echo "<td style=\"width: 18px; text-align: center; $row_color\">";
-												if (($user_usertype_current > 3 OR $user_id_current == $proj_rep_black) AND $riba_id != $riba_begin AND $riba_id != NULL AND $riba_stage_include == 1) {
-												echo "<a href=\"index2.php?action=project_stage_change&amp;proj_id=$proj_id&amp;move=prev&amp;stage_current=$riba_id\"><</a>";
-												}
 												
-											if ($proj_id == $_GET[proj_id]) { $background = "style =\"color: red; font-weight: bold; $row_color\""; } else { $background = NULL; }
-											echo "</td><td $row_color_style><span class=\"minitext\">$current_stage $row_text</span></td><td style=\"width: 18px; text-align: center; $row_color\">";
-												if (($user_usertype_current > 3 OR $user_id_current == $proj_rep_black) AND $riba_id != $riba_end AND $riba_id != NULL AND $riba_stage_include == 1) {
-												echo "<a href=\"index2.php?action=project_stage_change&amp;proj_id=$proj_id&amp;move=next&amp;stage_current=$riba_id\">></a>";
-												}
+												$deadline = $ts_fee_time_begin + $ts_fee_time_end;
+												$remaining = $deadline - time();
+												$remaining = round ($remaining / 604800);
+												
+											if ($deadline > time() && $remaining != 0) {
+												echo $remaining . "<br /><span class=\"minitext\">wks</span>";
+											} elseif ($deadline < time() && $deadline > 0 && $remaining != 0) {
+												echo $remaining . "<br /><span class=\"minitext\">wks</span>";									
+											} elseif ($deadline > 0 && $remaining == 0) {
+												echo "0<br /><span class=\"minitext\">wks</span>";	
+											}
+												
+											echo "</td><td $row_color_style><span class=\"minitext\">$current_stage $row_text</span></td>";
+											
+											echo "<td style=\"text-align: center; $row_color\">";
+													echo "<a href=\"index2.php?page=project_checklist&amp;proj_id=$proj_id\"><img src=\"images/ic_list_black_18dp.png\" alt=\"Checklist\" /></a>";
 											echo "</td>";
 											
 											echo "<td $row_color_style><a href=\"index2.php?page=user_view&amp;user_id=$user_id\">$user_initials</a></td>

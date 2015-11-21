@@ -3,9 +3,9 @@
 // First, determine the title of the page
 
 if($_GET[status] == "edit") {
-print "<h1>Edit Contact</h1>";
+echo "<h1>Edit Contact</h1>";
 } else {
-print "<h1>Add Contact</h1>";
+echo "<h1>Add Contact</h1>";
 }
 
 // Now populate the variables with either the failed results from the $_POST submission or from the database if we're editing an existing project
@@ -103,7 +103,7 @@ $contact_country = $_POST[contact_country];
 	print "<p>Mobile<br />";
 	print "<input type=\"text\" name=\"contact_mobile\" class=\"inputbox\" size=\"45\" value=\"$contact_mobile\" /></p>";
 	print "<p>Contact Email<br />";
-	print "<input type=\"text\" name=\"contact_email\" class=\"inputbox\" size=\"45\" value=\"$contact_email\" /></p>";
+	print "<input type=\"email\" name=\"contact_email\" class=\"inputbox\" size=\"45\" value=\"$contact_email\" /></p>";
 	print "<p>Sector<br />";
 	include("inc_data_contacts_sectorlist.php");
 	print "<p>Department<br />";

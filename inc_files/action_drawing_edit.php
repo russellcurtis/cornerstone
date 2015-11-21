@@ -9,7 +9,7 @@ $drawing_number_2 = CleanUp($_POST[drawing_number_2]);
 $drawing_number_3 = CleanUp($_POST[drawing_number_3]);
 $drawing_number_4 = CleanUp($_POST[drawing_number_4]);
 $drawing_project = CleanUp($_POST[drawing_project]);
-$drawing_author = CleanNumber($_POST[drawing_author]);
+$drawing_author = $_POST[drawing_author];
 $drawing_scale = CleanNumber($_POST[drawing_scale]);
 $drawing_paper = $_POST[drawing_paper];
 $drawing_orientation = CleanUp($_POST[drawing_orientation]);
@@ -79,6 +79,8 @@ if ($drawing_id > 0) {
 		$result = mysql_query($sql_edit, $conn) or die(mysql_error());
 		$actionmessage = "Drawing updated successfully.";
 		$techmessage = $sql_edit;
+		
+		//echo "<p>$sql_edit</p>";
 
 		$drawing_affected = mysql_affected_rows();		
 		

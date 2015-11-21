@@ -71,10 +71,16 @@ $pdf->addPage(L);
 		$pdf->SetDrawColor(255,0,0);
 		
 		
-		$today = time() - $current_time;
+		$today = BeginWeek(time()) - BeginWeek($current_time);
+		$week_begin = date ("N",time());
+		if ($week_begin < 6) {
+		$week_elapsed = round ((time() - BeginWeek(time())) / 432000 , 2) * $colwidth;
+		} else {
+		$today = BeginWeek(time()) + 604800;
+		}
 		$today = $today / 604800;
 		$today = round ( $today , 2 );
-		$today = ($colwidth * $today) + 50;
+		$today = ($colwidth * $today) + 50 + $week_elapsed;
 		$pdf->Line($today,32.5,$today,200);
 		
 		$x = 10;
@@ -424,7 +430,7 @@ DrawGrid();
 	
 		$pdf->SetFont('Helvetica','B',6);
 		$pdf->Cell(0,5,'',0,1,L);
-		$pdf->Cell(40,5,"Surplus",0,0,L);
+		$pdf->Cell(40,5,"Actual surplus",0,0,L);
 		$pdf->SetFont('Helvetica','',6);
 		$arrayname = 0;
 		$weekdiff_array = array();
@@ -468,7 +474,7 @@ DrawGrid();
 		$pdf->SetTextColor(0);
 		$pdf->SetFont('Helvetica','B',8);
 		$pdf->Cell(0,5,'',0,1,L);
-		$pdf->Cell(40,5,"Target + Surplus Profit",0,0,L);
+		$pdf->Cell(40,5,"Actual Profit",0,0,L);
 		$pdf->SetFont('Helvetica','B',6);
 		$counter = 0;
 		$array_netprofit = array();
@@ -508,8 +514,12 @@ function CheckHols($date, $user_id, $start) {
 		if (in_array($date,$array_print)) { return "yes"; }
 
 }
-		
+		// First create an array which extracts all bank holidays from the database
 
+		$sql_bankholidays = "SELECT bankholidays_datestamp FROM intranet_user_holidays_bank WHERE bankholiday_timestamp > $current_time";
+		$result_bankholidays = mysql_query($sql_bankholidays, $conn) or die(mysql_error());
+		$array_bankholidays = mysql_fetch_array($result_bankholidays);
+		
 		
 		$sql_holidays = "SELECT user_name_first, user_name_second, user_id, user_user_added, user_user_ended FROM intranet_user_details WHERE ( user_user_ended > $current_time OR user_user_ended IS NULL OR user_user_ended = 0 ) OR (user_user_added < $current_time AND user_user_ended > $start) ORDER BY user_name_second, user_name_first";
 			$result_holidays = mysql_query($sql_holidays, $conn) or die(mysql_error());
@@ -545,8 +555,15 @@ function CheckHols($date, $user_id, $start) {
 					
 					
 					$date = date ("Y-m-d",$user_start);
-					if (CheckHols($date,$user_id,$current_time) == "yes") { $pdf->SetFillColor(220); } else { $pdf->SetFillColor(175); }
+					if (CheckHols($date,$user_id,$current_time) == "yes" && date("z",$time) == date("z",$user_start) ) { $pdf->SetFillColor(255,150,150);
+					} elseif (CheckHols($date,$user_id,$current_time) == "yes" && date("z",$time) != date("z",$user_start) ) { $pdf->SetFillColor(220);
+					} elseif (CheckHols($date,$user_id,$current_time) != "yes" && date("z",$time) == date("z",$user_start) ) { $pdf->SetFillColor(255,0,0);
+					} else { $pdf->SetFillColor(175);
+					}
 					if ($user_user_added >= $user_start) { $pdf->SetFillColor(255); } elseif ($user_user_ended <= $user_start && $user_user_ended > 0) { $pdf->SetFillColor(255); }
+					
+					if ( array_search ( $date , $array_bankholidays ) > 0 ) { $pdf->SetFillColor(150); } // don't understand why this search does not find the bank holidays?
+					
 					if (date("N",$user_start) < 6) {
 						$print_cell = date("j",$user_start);
 						$pdf->Cell($day_width,5,'',L,0,L,1);
@@ -643,7 +660,12 @@ function CheckHols($date, $user_id, $start) {
 
 // and send to output
 
-$pdf->Output();
+// and send to output
+
+$file_name = date ("Y-m-d",$current_time) . "_resourcing_analysis.pdf";
+
+
+$pdf->Output($file_name,I);
 
 
 }

@@ -79,7 +79,7 @@ $company_notes = $_POST[company_notes];
 	print "<fieldset><legend>Additional Information</legend>";
 
 	print "<p>Company Web Site<br />";
-	print "<input type=\"text\" name=\"company_web\" class=\"inputbox\" size=\"45\" value=\"$company_web\" />";
+	print "http://<input type=\"text\" name=\"company_web\" class=\"inputbox\" size=\"45\" value=\"$company_web\" />";
 	echo "<p>Notes<br /><textarea name=\"company_notes\" rows=\"8\" cols=\"60\">$company_notes</textarea></p>";
 	
 	print "</fieldset>";

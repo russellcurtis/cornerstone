@@ -43,7 +43,7 @@ $proj_name = $array_project['proj_name'];
 $blog_title = $array_project['blog_title'];
 $blog_date = $array_project['blog_date'];
 $blog_type = $array_project['blog_type'];
-$blog_text = RemoveShit($array_project['blog_text']);
+$blog_text = strip_tags(nl2br(RemoveShit($array_project['blog_text'])));
 $user_name_first = $array_project['user_name_first'];
 $user_name_second = $array_project['user_name_second'];
 

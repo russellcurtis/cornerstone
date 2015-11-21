@@ -115,6 +115,25 @@ $result = mysql_query($sql, $conn) or die(mysql_error());
 	}
 }
 
+
+// QMS
+
+print "<tr><td colspan=\"2\"><strong>Checklist</strong></td></tr>";
+
+$sql = "SELECT checklist_comment, checklist_project FROM intranet_project_checklist WHERE " . SearchTerms($keywords_array, "checklist_comment") . "ORDER BY checklist_date DESC";
+$result = mysql_query($sql, $conn) or die(mysql_error());
+
+	if (mysql_num_rows($result) == 0) {
+		echo "<tr><td colspan=\"2\">No results found for checklists</td></tr>";
+	} else {
+			while ($array = mysql_fetch_array($result)) {
+			$checklist_comment = $array['checklist_comment'];
+			$checklist_project = $array['checklist_project'];
+
+			echo "<tr><td colspan=\"2\"><a href=\"index2.php?page=project_checklist&amp;proj_id=$checklist_project\">$checklist_comment</a></td></tr>";
+	}
+}
+
 // Tasks
 
 print "<tr><td colspan=\"2\"><strong>Tasks</strong></td></tr>";

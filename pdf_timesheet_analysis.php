@@ -50,7 +50,7 @@ function TotalCost($proj_id, $bar_scale, $bar_width_standard) {
 		$cost_proj = $array_cost_proj['SUM(ts_cost_factored)'];
 		
 		$sql_fee_proj = "SELECT SUM(ts_fee_value) FROM intranet_timesheet_fees LEFT JOIN intranet_timesheet ON ts_fee_stage = ts_stage_fee WHERE `ts_fee_project` = $proj_id AND ts_id > 0";
-		$sql_fee_proj = " SELECT SUM(ts_fee_value), SUM(ts_fee_value * (1/ts_fee_target)) FROM intranet_timesheet_fees WHERE `ts_fee_project` = $proj_id AND ts_fee_prospect = 100 ";
+		//$sql_fee_proj = " SELECT SUM(ts_fee_value), SUM(ts_fee_value * (1/ts_fee_target)) FROM intranet_timesheet_fees WHERE `ts_fee_project` = $proj_id AND ts_fee_prospect = 100 ";
 		$result_fee_proj = mysql_query($sql_fee_proj, $conn) or die(mysql_error());
 		$array_fee_proj = mysql_fetch_array($result_fee_proj);
 		$fee_proj = $array_fee_proj['SUM(ts_fee_value)'];

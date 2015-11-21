@@ -60,7 +60,7 @@ $result = mysql_query($sql, $conn) or die(mysql_error());
 					$drawing_issue_count = mysql_num_rows($result_drawing_delete);
 					if ($drawing_issue_count == 0) {
 					
-						echo "<a href=\"index2.php?page=drawings_list&proj_id=$proj_id&amp;&amp;action=drawing_delete\" class=\"submenu_bar\"  onClick=\"javascript:return confirm('Are you sure you want to delete this drawing? Deleted drawings (and any revisions) will be permanently deleted and cannot be recovered. There are currently $drawing_count revisions of this drawing on the system.')\">Delete Drawing&nbsp;<img src=\"images/button_delete.png\" alt=\"Delete Drawing\" /></a>";
+						echo "<a href=\"index2.php?page=drawings_list&amp;drawing_id=$drawing_id&amp;proj_id=$proj_id&amp;action=drawing_delete\" class=\"submenu_bar\"  onClick=\"javascript:return confirm('Are you sure you want to delete this drawing? Deleted drawings (and any revisions) will be permanently deleted and cannot be recovered. There are currently $drawing_count revisions of this drawing on the system.')\">Delete Drawing&nbsp;<img src=\"images/button_delete.png\" alt=\"Delete Drawing\" /></a>";
 					
 					}
 					

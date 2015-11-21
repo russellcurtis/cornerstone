@@ -602,10 +602,10 @@ function TextAreaEdit() {
 					tinymce.init({
 					selector: \"textarea\",
 					plugins: [
-						\"advlist autolink lists link image charmap print preview anchor\"
+						\"advlist autolink lists link charmap print preview anchor textcolor\"
 					],
 					menubar: false,
-					toolbar: \"undo redo | bold italic underline strikethrough | bullist numlist outdent indent | link unlink | image \",
+					toolbar: \"undo redo | bold italic underline strikethrough | bullist numlist outdent indent | link unlink | forecolor \",
 					autosave_ask_before_unload: false,
 					height : 300,
 					max_height: 1000,

@@ -2,11 +2,12 @@
 
 if ($_GET[item] > 0 && $user_usertype_current > 2) { $item = $_GET[item]; } else { unset($item); }
 
-if ($_POST[item_id] > 0 && $_POST[item_notes] != NULL) {
+if ($_POST[item_id] > 0 && $_POST[item_notes] != NULL OR $_POST[item_stage] != NULL) {
 
 	$item_id = $_POST[item_id];
 	$item_notes = trim ( addslashes ($_POST[item_notes]) );
-	$sql_update = "UPDATE intranet_project_checklist_items SET item_notes = \"" . $item_notes . "\" WHERE item_id = $item_id LIMIT 1";
+	$item_stage = $_POST[item_stage];
+	$sql_update = "UPDATE intranet_project_checklist_items SET item_notes = \"" . $item_notes . "\", item_stage = $item_stage WHERE item_id = $item_id LIMIT 1";
 	$result_update = mysql_query($sql_update, $conn) or die(mysql_error());
 	
 }
@@ -74,7 +75,7 @@ if (!$item) {
 
 
 echo "<table>";
-echo "<tr><th>Item</th><th>Required</th><th>Date Completed</th><th>Comment</th><th colspan=\"3\">Link to File</th></tr>";
+echo "<tr><th>Item</th><th>Required</th><th>Date Completed</th><th>Comment</th><th>Link to File</th><th colspan=\"2\">File Upload</th></tr>";
 
 $current_item = 0;
 
@@ -89,6 +90,8 @@ if (mysql_num_rows($result_checklist) > 0) {
 	$item_group = $array_checklist['item_group'];
 	$item_required = $array_checklist['item_required'];
 	$item_notes = $array_checklist['item_notes'];
+	$item_order = $array_checklist['item_order'];
+	$item_stage = $array_checklist['item_stage'];
 	
 	$checklist_id = $array_checklist['checklist_id'];
 	$checklist_required = $array_checklist['checklist_required'];
@@ -100,10 +103,15 @@ if (mysql_num_rows($result_checklist) > 0) {
 	$checklist_timestamp = time();
 	$checklist_project = $_GET[proj_id];
 	
+	if ($checklist_required == 2 && ( $checklist_date == "0000-00-00" OR $checklist_date == NULL ) ) { $bg =  "style=\"background: rgba(255,0,0, 0.4); \""; }
+		elseif ($checklist_required == 2 && ( $checklist_date != "0000-00-00" OR $checklist_date != NULL ) ) { $bg =  "style=\"background: rgba(0,255,0,0.4); \""; }
+		elseif ($checklist_required == 1) { $bg =  "style=\"background: rgba(200,200,200, 0.4); \""; }
+		else { $bg =  "style=\"background: rgba(255,220,0, 0.4); \""; }
+	
 	if ($item_group != $group) { echo "<tr><td colspan=\"7\"><strong>$item_group</strong></td></tr>"; }
 	
 	
-	echo "<tr><td>";
+	echo "<tr><td $bg>";
 	//if ($item_name_current != $item_name) { 
 	
 	echo $item_name;
@@ -120,7 +128,7 @@ if (mysql_num_rows($result_checklist) > 0) {
 	$item_name_current = $item_name;
 	echo "</td>";
 	
-	echo "<td>";
+	echo "<td $bg>";
 	
 	if (!$item) {
 	
@@ -133,7 +141,7 @@ if (mysql_num_rows($result_checklist) > 0) {
 		";
 
 	
-		echo "<select name=\"checklist_required[]\">";
+		echo "<select name=\"checklist_required[]\" $bg>";
 		if ($checklist_required == NULL) { $checked = "selected=\"selected\""; } else { unset($checked); }
 		echo "<option value=\"0\" $checked>-</option>";
 		if ($checklist_required == 1) { $checked = "selected=\"selected\""; } else { unset($checked); }
@@ -153,24 +161,32 @@ if (mysql_num_rows($result_checklist) > 0) {
 	echo "</td>";
 
 	if (!$item) {
-		echo "<td><input name=\"checklist_date[]\" type=\"date\" value=\"$checklist_date\" /></td>";
-		echo "<td><input name=\"checklist_comment[]\" value=\"$checklist_comment\" /></td>";
-		echo "<td><input name=\"checklist_link[]\" value=\"$checklist_link\" /></td>";
+		echo "<td $bg><input name=\"checklist_date[]\" type=\"date\" value=\"$checklist_date\" $bg /></td>";
+		echo "<td $bg><input name=\"checklist_comment[]\" value=\"$checklist_comment\" $bg /></td>";
+		echo "<td $bg><input name=\"checklist_link[]\" value=\"$checklist_link\" $bg /></td>";
 		echo "<td style=\"min-width: 20px;\">";
 			if ($checklist_link) { echo "<a href=\"$checklist_link\"><img src=\"images/button_internet.png\" /></a>"; }
 		echo "</td>";
 	} else {	
 		if ($checklist_date == 0) { $checklist_date = "-";}
-		echo "<td>$checklist_date</td>";
-		echo "<td>$checklist_comment</td>";
+		echo "<td $bg>$checklist_date</td>";
+		echo "<td $bg>$checklist_comment</td>";
 		if ($checklist_link) {
 			echo "<td colspan=\"2\" style=\"min-width: 20px;\"><a href=\"$checklist_link\"><img src=\"images/button_internet.png\" /></a></td>";
 		} elseif ($_GET[item] == $item_id) {
-			echo "<td colspan=\"3\">-</td>";
+			echo "<td colspan=\"3\" $bg>-</td>";
 		} else {
-			echo "<td colspan=\"2\">-</td>";
+			echo "<td colspan=\"2\" $bg>-</td>";
 		}
 	}
+	
+	
+	//echo "<td $bg>";
+	
+	//echo "<input type=\"file\" name=\"fileToUpload\" id=\"$item_id\" $bg>";
+	
+	
+	//echo "</td>";
 
 	
 	if ($item_notes != NULL) {
@@ -196,7 +212,30 @@ if (mysql_num_rows($result_checklist) > 0) {
 		
 	} elseif ($item_id > 0 && $_GET[item] == $item_id) {
 		
-		TextAreaEdit(); echo "<tr><td colspan=\"6\"><form action=\"index2.php?page=project_checklist_edit&proj_id=$proj_id\" method=\"post\"><textarea style=\"width: 99%;height: 500px;\" name=\"item_notes\">$item_notes</textarea></td><td><input type=\"hidden\" name=\"item_id\" value=\"$item_id\" /><input type=\"submit\" value=\"Update\" /></form></td></tr>";
+		TextAreaEdit(); echo "<form action=\"index2.php?page=project_checklist_edit&proj_id=$proj_id\" method=\"post\"><tr><td colspan=\"6\"><textarea style=\"width: 99%;height: 500px;\" name=\"item_notes\">$item_notes</textarea></td><td><input type=\"hidden\" name=\"item_id\" value=\"$item_id\" /><input type=\"submit\" value=\"Update\" /></td></tr>";
+		
+		$sql_stages = "SELECT stage_id,stage_name FROM intranet_project_checklist_stages ORDER BY stage_order";
+		$result_stages = mysql_query($sql_stages, $conn) or die(mysql_error());
+		
+		echo "<tr><td colspan=\"6\">";
+		
+		echo "Select Project Stage: <select name=\"item_stage\">";
+		
+		echo "<option value=\"\">-- None --</option>";
+		
+		while ($array_stages = mysql_fetch_array($result_stages)) {
+			
+			if ($item_stage == $array_stages['stage_id'] ) { $selected = " selected=\"selected\" "; } else { unset($selected); }
+			
+			echo "<option value=\"" . $array_stages['stage_id'] . "\"" . $selected . ">" . $array_stages['stage_name'] . "</option>";
+
+		}
+				
+		echo "</select>";
+		
+		echo "</td></tr>";
+		
+		echo "</form>";
 	
 	} else { 
 	
@@ -205,6 +244,8 @@ if (mysql_num_rows($result_checklist) > 0) {
 	
 	
 	}
+	
+
 	
 	$group = $item_group;
 	

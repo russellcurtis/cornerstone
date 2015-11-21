@@ -136,7 +136,11 @@ echo "<h2 id=\"holidaysthisyear\">Holidays in $year</h2>";
 
 if ($user_usertype_current < 3) { $limit = "AND user_id = $user_id"; } else { unset( $limit );}
 
-$sql_users = "SELECT * FROM intranet_user_details WHERE ((user_user_ended > $beginnning_of_this_year) OR (user_user_ended = 0) OR (user_user_ended = NULL)) $limit ORDER BY user_name_second";
+$sql_users = "SELECT * FROM intranet_user_details WHERE (
+(user_user_added BETWEEN $beginnning_of_this_year AND $beginnning_of_next_year)
+OR (user_user_ended BETWEEN $beginnning_of_this_year AND $beginnning_of_next_year)
+OR (user_user_added < $beginnning_of_this_year AND (user_user_ended = 0 OR user_user_ended IS NULL))
+) $limit ORDER BY user_name_second";
 
 
 $result_users = mysql_query($sql_users, $conn);
@@ -209,7 +213,7 @@ while ($array_users = mysql_fetch_array($result_users)) {
 		
 	echo "
 	<tr>
-	<td><a href=\"index2.php?page=holiday_approval&amp;showuser=$user_id#holidaysthisyear\">$user_name_first $user_name_second</a></td>
+	<td><a href=\"index2.php?page=holiday_approval&amp;showuser=$user_id&year=$_GET[year]#holidaysthisyear\">$user_name_first $user_name_second</a></td>
 	<td>" . date ( "d M Y", $user_user_added ) . "</td>
 	<td>" . date ( "d M Y", $user_user_ended ) . "</td>
 	<td>$length</td>
@@ -225,21 +229,29 @@ while ($array_users = mysql_fetch_array($result_users)) {
 	
 	if ($_GET[showuser] == $user_id) {
 		
-			$sql_totalhols = "SELECT holiday_timestamp, holiday_length FROM intranet_user_holidays WHERE holiday_user = $user_id AND holiday_paid = 1 ORDER BY holiday_timestamp";
+			$sql_totalhols = "SELECT holiday_timestamp, holiday_length, holiday_paid FROM intranet_user_holidays WHERE holiday_user = $user_id ORDER BY holiday_timestamp";
 			$result_totalhols = mysql_query($sql_totalhols, $conn);
 
 				if (mysql_num_rows($result_totalhols) > 0) {
 					
+					echo "<tr><th></th><th colspan=\"4\">Date</th><th>Paid Holiday</th><th>Unpaid Holiday</th><th colspan=\"6\"></th></tr>";
 					
 						$totalhols_count = 0;
+						$totalholsup_count = 0;
 					
 						while ($array_totalhols = mysql_fetch_array($result_totalhols)) {
 							
-							$totalhols_count = $totalhols_count + $array_totalhols['holiday_length'];
-						
-							echo "<tr><td></td><td colspan=\"4\">" . date ( "l, j F Y", $array_totalhols['holiday_timestamp'] ) . "</td><td colspan=\"7\">$totalhols_count</td></tr>";
+							if ($array_totalhols['holiday_paid'] > 0) {
+								$totalhols_count = $totalhols_count + $array_totalhols['holiday_length'];
+								echo "<tr><td></td><td colspan=\"4\">" . date ( "l, j F Y", $array_totalhols['holiday_timestamp'] ) . "</td><td style=\"text-align: right;\">$totalhols_count</td><td></td><td colspan=\"5\"></td></tr>";
+							} else {
+								$totalholsup_count = $totalholsup_count + $array_totalhols['holiday_length'];
+								echo "<tr><td></td><td colspan=\"4\"><i>" . date ( "l, j F Y", $array_totalhols['holiday_timestamp'] ) . "</i></td><td></td><td style=\"text-align: right;\"><i>$totalholsup_count</i></td><td colspan=\"5\"></td></tr>";
+							}
 						
 						}
+						
+						echo "<tr><td></td><td colspan=\"4\"><strong>Total</strong></td><td style=\"text-align: right;\"><strong>$totalhols_count</strong></td><td style=\"text-align: right;\"><strong>$totalholsup_count</strong></td><td colspan=\"6\"></th></tr>";
 					
 					
 				}

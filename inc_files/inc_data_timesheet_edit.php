@@ -39,7 +39,7 @@ if ($ts_id != NULL AND $_POST[action] == NULL) {
 	print "<h2>Add Timesheet Entry</h2>";
 }
 
-print "<form action=\"".$TSPage."week=$ts_weekbegin"."&amp;user_view=$user_view"."\" method=\"post\">";
+print "<form action=\"".$TSPage."week=$ts_weekbegin"."&amp;user_view=$viewuser"."\" method=\"post\">";
 
 	if ($TSFormat == "popup") { echo "<table summary=\"Timesheet entry form\"><tr><td colspan=\"4\">"; }
 

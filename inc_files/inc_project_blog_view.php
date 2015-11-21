@@ -53,7 +53,7 @@ print "<h3>Entry by</h3><p>";
 $data_user_id = $blog_user; include("dropdowns/inc_data_user_name.php");
 print "</p>";
 
-print "<h3>$blog_type_view</h3><blockquote><p>".TextPresent($blog_text)."</p></blockquote>";
+print "<h3>$blog_type_view</h3><blockquote><p>".$blog_text."</p></blockquote>";
 
 // Blogs that this entry links to
 

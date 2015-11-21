@@ -107,6 +107,13 @@ print "<li><a href=\"index2.php?page=drawings_view\">Manage Drawings</a></li>";
 print "</ul>";
 }
 
+if ($module_library == 1) {
+print "<h1 class=\"heading_side\">Library</h1>";
+print "<ul class=\"button_left\">";
+echo "<li><a href=\"index2.php?page=library_index\">Document Library</a></li>";
+print "</ul>";
+}
+
 if ($module_tenders == 1) {
 print "<h1 class=\"heading_side\">Tenders</h1>";
 print "<ul class=\"button_left\">";

@@ -1,21 +1,54 @@
 <?php
 
-function CreateList($input) {
-
-	$output = $input;
+function CreateList($input, $qms_id, $bg) {
+	
+	$ul = 1; $list = 0;
+	$tr = 1; $table = 0;
+	$id = 1;
+	
+		$links = explode(" ", $input);
+			foreach ($links AS $replace) {
+				if (substr($replace,0,1) == "!") {
+				$url = explode(".",$replace);
+				$linker = " <a href=\"index2.php?page=qms_view&amp;s1=" . ltrim($url[0], "!") . "&s2=$url[1]\">" . ltrim($replace,"!") . "</a> ";
+				$input = str_replace($replace,$linker,$input);
+				}
+			}
+	
+	$array = explode ( "\n", $input);
 	
 
 	
-	$output = str_replace("\n- ","\n&bull;&nbsp;",$output);
-	
-	//$output_li = preg_replace("/^- (.*)$/m", "<li>$1</li>", $input);
-	//$output = preg_replace("/((<li>.*<\/li>\n)+)/m", "<ul>\n$1</ul>\n", $output_li);
-	
+	foreach ($array AS $line) {
+		
+		$line = trim($line);
+		
+		if ($id == 1) { $qms_id = "id=\"" . $qms_id . "\""; $id = 0; } else { unset($qms_id); }
+		
+		// First work out whether this is a list or not
+		
+		if (substr($line,0,2) == "- " && $ul == 1 ) { echo "<ul $qms_id><li>" . ltrim ($line,"- ") . "</li>"; $ul = 0; $list = 1; }
+		elseif (substr($line,0,2) == "- " && $ul == 0 ) { echo "<li>" . ltrim ($line,"- ") . "</li>"; $list = 1; }
+		if (substr($line,0,2) != "- " && $list == 1 ) { echo "</ul>"; $ul = 1; $list = 0; }
+		
+		// Or a table
+		
+		if (substr($line,0,1) == "|" && $tr == 1 ) { echo "<table $qms_id><tr><th>" . str_replace ("|","</th><th>", ltrim ($line,"|") ) . "</th></tr>"; $tr = 0; $table = 1; }
+		elseif (substr($line,0,1) == "|" && $tr == 0 ) { echo "<tr><td>" . str_replace ("|","</td><td>", ltrim ($line,"|") ) . "</td></tr>"; $table = 1; }
+		if (substr($line,0,1) != "|" && $table == 1 ) { echo "</table>"; $tr = 1; $table = 0; }
+		
+			
 
- $output = nl2br($output);
-
+		
+		// And if it's just a standard paragraph...
+		
+		if (substr($line,0,2) != "- " && $list == 0 && $table == 0 ) { echo "<p $qms_id $bg >" . $line . "</p>"; }
+		
+	}
 	
-	return $output;
+	if ($list == 1 ) { echo "</ul>"; $ul = 0; $list = 0; }
+	
+	if ($table == 1 ) { echo "</table>"; $tr = 0; $table = 0; }
 
 }
 
@@ -125,11 +158,13 @@ if ($s1 == 0) {
 					
 					if ($qms_id == $_GET[qms_id]) { $bg = " style=\"background: rgba(20, 201, 201, 0.25); padding: 6px 6px 6px 6px;\" "; } else { unset($bg); }
 
-					if ($qms_toc4 > 0 && $qms_type == "code") { echo "<pre id=\"$qms_id\" $bg>" . CreateList ( $qms_text ) . "</pre>"; }
+					if ($qms_toc4 > 0 && $qms_type == "code") { echo "<pre id=\"$qms_id\" $bg>" . nl2br($qms_text) . "</pre>"; }
 					
-					elseif ($qms_toc4 > 0 && $qms_type == "comp") { echo "<span style=\"display: block; width: 100%; height: 40px; border: 1px #000 dotted; margin-top: 12px; margin-bottom: 20px;\" id=\"$qms_id\">" . CreateList ( $qms_text ) . "</span>"; }
+					elseif ($qms_toc4 > 0 && $qms_type == "check") { echo "<p><input type=\"checkbox\" disabled=\"disabled\" />&nbsp;" . $qms_text . "</p>"; }
 					
-					elseif ($qms_toc4 > 0 && $qms_type == NULL) { echo "<p id=\"$qms_id\" $bg>" . CreateList ( $qms_text ) . "</p>"; }
+					elseif ($qms_toc4 > 0 && $qms_type == "image") { echo "<p id=\"$qms_id\" $bg><img src=\"images/$qms_text\" alt=\"$qms_text\" style=\"width: 100%;\" /></p>"; }
+					
+					elseif ($qms_toc4 > 0 && $qms_type == NULL) { CreateList ( $qms_text, $qms_id, $bg ); }
 
 					elseif ($qms_toc3 > 0) { echo "<h4 id=\"$qms_id\" $bg>" . $qms_toc1. "." . $qms_toc2. "." . $qms_toc3 . " " . $qms_text . "</h4>"; }
 

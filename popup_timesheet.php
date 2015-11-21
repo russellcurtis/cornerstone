@@ -49,13 +49,19 @@ if ($user_usertype_current > 3 AND $TSFormat == "popup") {
 	$user_initials = $array_userlist['user_initials'];
 	$user_user_added = $array_userlist['user_user_added'];
 	
-	if ($user_id == $_GET[user_view]) {
+	if ($user_id == $viewuser) {
 	$user_name = " for " . $array_userlist['user_name_first'] ." ". $array_userlist['user_name_second'];
 	$user_datum = $user_user_added;
 	}
-	if ($user_id == $_COOKIE[user]) { $user_id = NULL; $strong = "<strong>"; $strong2 = "</strong>"; } else { $strong = ""; $strong2 = ""; }
-	echo "$strong<a href=\"popup_timesheet.php?week=$ts_weekbegin&amp;user_view=$user_id\">$user_initials</a>$strong2";
+	if ($user_id != $viewuser) {
+		echo "<a href=\"popup_timesheet.php?week=$ts_weekbegin&amp;user_view=$user_id\">$user_initials</a>";
+	} else {
+		echo "<strong>$user_initials</strong>";
+	}
+	
 	echo " | ";
+	
+	
 	}
 
 }
@@ -93,22 +99,22 @@ print "<p class=\"menu_bar\">";
 if ($user_view != NULL) { $user_filter = "&amp;user_view=" . $user_view; } else { $user_filter = NULL; }
 
 if ($link_lastmonth > $user_user_added) {
-	echo "<a href=\"popup_timesheet.php?week=$link_lastmonth".$user_filter."\" class=\"menu_tab\"><< w/b <strong>".date("j M Y",$link_lastmonth)."</strong></a>";
+	echo "<a href=\"popup_timesheet.php?user_view=$viewuser&amp;week=$link_lastmonth".$user_filter."\" class=\"menu_tab\"><< w/b <strong>".date("j M Y",$link_lastmonth)."</strong></a>";
 }
 
 if (($user_user_added - $link_lastweek) < 604800) {
 
-echo "<a href=\"popup_timesheet.php?week=$link_lastweek".$user_filter."\" class=\"menu_tab\">< w/b <strong>".date("j M Y",$link_lastweek)."</strong></a>";
+echo "<a href=\"popup_timesheet.php?user_view=$viewuser&amp;week=$link_lastweek".$user_filter."\" class=\"menu_tab\">< w/b <strong>".date("j M Y",$link_lastweek)."</strong></a>";
 }
 
-echo "<a href=\"popup_timesheet.php?week=".BeginWeek(time()) . $user_filter."\" class=\"menu_tab\"><strong>This Week</strong></a>";
+echo "<a href=\"popup_timesheet.php?user_view=$viewuser&amp;week=".BeginWeek(time()) . $user_filter."\" class=\"menu_tab\"><strong>This Week</strong></a>";
 
 
 if ($link_nextweek < time() AND $link_nextweek < $user_user_ended) {
-echo "<a href=\"popup_timesheet.php?week=$link_nextweek".$user_filter."\" class=\"menu_tab\">w/b <strong>".date("j M Y",$link_nextweek)." ></strong></a>"; }
+echo "<a href=\"popup_timesheet.php?user_view=$viewuser&amp;week=$link_nextweek".$user_filter."\" class=\"menu_tab\">w/b <strong>".date("j M Y",$link_nextweek)." ></strong></a>"; }
 
 if ($link_nextmonth < time() AND $link_nextmonth < $user_user_ended) {
-echo "<a href=\"popup_timesheet.php?week=$link_nextmonth".$user_filter."\" class=\"menu_tab\">w/b <strong>".date("j M Y",$link_nextmonth)."</strong> >></a>"; }
+echo "<a href=\"popup_timesheet.php?user_view=$viewuser&amp;week=$link_nextmonth".$user_filter."\" class=\"menu_tab\">w/b <strong>".date("j M Y",$link_nextmonth)."</strong> >></a>"; }
 
 echo "</p>";
 

@@ -60,51 +60,126 @@ if ($_GET[drawing_id] == NULL) {
 		echo "<input type=\"text\" value=\"$drawing_number\" name=\"drawing_number_1\" maxlength=\"50\" style=\"text-align: right; width: 45px;\" id=\"text1.1\" disabled=\"disabled\" />";
 		echo "-";
 		echo "<select name=\"drawing_number_2\" id=\"text1.2\" disabled=\"disabled\" >";
-			echo "<option value=\"SK\">SK (Sketch)</option>";
-			echo "<option value=\"PL\">PL (Planning)</option>";
-			echo "<option value=\"TD\">TD (Tender)</option>";
-			echo "<option value=\"CT\">CN (Contract)</option>";
-			echo "<option value=\"CT\">CT (Construction)</option>";
-			echo "<option value=\"FD\">FD (Final Design)</option>";
-		echo "</select>";
-		echo "-";
-		echo "<select name=\"drawing_number_3\"  id=\"text1.3\" disabled=\"disabled\">";
-			echo "<option value=\"\">- None -</option>";
-			echo "<option value=\"SV\">SV (Survey)</option>";
-			echo "<option value=\"ST\">ST (Site / Location)</option>";
-			echo "<option value=\"GA\" selected=\"selected\">GA (General Arrangement)</option>";
-			echo "<option value=\"AS\">AS (Assembly)</option>";
-			echo "<option value=\"DE\">DE (Detail)</option>";
-		echo "</select>";
-		echo "-";
-		echo "<select name=\"drawing_number_4\"  id=\"text1.4\" disabled=\"disabled\">";
-			echo "<option value=\"\">- None -</option>";
-			echo "<option value=\"099\">099 (Basement Plan - As Existing)</option>";
-			echo "<option value=\"100\">100 (Ground Floor Plan - As Existing)</option>";
-			echo "<option value=\"101\">101 (First Floor Plan - As Existing)</option>";
-			echo "<option value=\"102\">102 (Second Floor Plan - As Existing)</option>";
-			echo "<option value=\"103\">103 (Third Floor Plan - As Existing)</option>";
-			echo "<option value=\"104\">104 (Fourth Floor Plan - As Existing)</option>";
-			echo "<option value=\"104\">105 (Fifth Floor Plan - As Existing)</option>";
-			echo "<option value=\"106\">106 (Sixth Floor Plan - As Existing)</option>";
-			echo "<option value=\"107\">107 (Seventh Floor Plan - As Existing)</option>";
-			echo "<option value=\"108\">108 (Eighth Floor Plan - As Existing)</option>";
-			echo "<option value=\"109\">109 (Ninth Floor Plan - As Existing)</option>";
-			echo "<option value=\"110\">110 (Tenth Floor Plan - As Existing)</option>";
+		
+		$sql_tier1 = "SELECT class_num, class_name FROM intranet_drawings_standards_class WHERE class_tier = 1 ORDER BY class_order";
+		$result_tier1 = mysql_query($sql_tier1, $conn) or die(mysql_error());
+		while ($array_tier1 = mysql_fetch_array($result_tier1)) {
+		
+			echo "<option value=\"" . $array_tier1['class_num'] . "\">" . $array_tier1['class_num'] . " (" . str_replace ("\n", " - ", $array_tier1['class_name']) . ")</option>";
 			
-			echo "<option value=\"599\">599 (Basement Plan - As Proposed)</option>";
-			echo "<option value=\"600\">600 (Ground Floor Plan - As Proposed)</option>";
-			echo "<option value=\"601\">601 (First Floor Plan - As Proposed)</option>";
-			echo "<option value=\"602\">602 (Second Floor Plan - As Proposed)</option>";
-			echo "<option value=\"603\">603 (Third Floor Plan - As Proposed)</option>";
-			echo "<option value=\"604\">604 (Fourth Floor Plan - As Proposed)</option>";
-			echo "<option value=\"604\">605 (Fifth Floor Plan - As Proposed)</option>";
-			echo "<option value=\"606\">606 (Sixth Floor Plan - As Proposed)</option>";
-			echo "<option value=\"607\">607 (Seventh Floor Plan - As Proposed)</option>";
-			echo "<option value=\"608\">608 (Eighth Floor Plan - As Proposed)</option>";
-			echo "<option value=\"609\">609 (Ninth Floor Plan - As Proposed)</option>";
-			echo "<option value=\"610\">610 (Tenth Floor Plan - As Proposed)</option>";
+		}
+		
 		echo "</select>";
+		echo "-";
+		
+		
+		// This is where we need to insert a <script> that filters the subsequent <select>
+		
+				echo "<script type=\"text/javascript\"> 
+				function hideClass(t){ 
+				if (document.getElementById('text1.3').value == \"SV\"){
+						document.getElementById('text1.41').style.display='';
+						document.getElementById('text1.42').style.display='none';
+						document.getElementById('text1.43').style.display='none';
+						document.getElementById('text1.44').style.display='none';
+						document.getElementById('text1.45').style.display='none';
+				} else if (document.getElementById('text1.3').value == \"ST\"){
+						document.getElementById('text1.41').style.display='none';
+						document.getElementById('text1.42').style.display='';
+						document.getElementById('text1.43').style.display='none';
+						document.getElementById('text1.44').style.display='none';
+						document.getElementById('text1.45').style.display='none';
+				} else if (document.getElementById('text1.3').value == \"GA\"){
+						document.getElementById('text1.41').style.display='none';
+						document.getElementById('text1.42').style.display='none';
+						document.getElementById('text1.43').style.display='';
+						document.getElementById('text1.44').style.display='none';
+						document.getElementById('text1.45').style.display='none';
+				} else if (document.getElementById('text1.3').value == \"AS\"){
+						document.getElementById('text1.41').style.display='none';
+						document.getElementById('text1.42').style.display='none';
+						document.getElementById('text1.43').style.display='none';
+						document.getElementById('text1.44').style.display='';
+						document.getElementById('text1.45').style.display='none';
+				} else if (document.getElementById('text1.3').value == \"DE\"){
+						document.getElementById('text1.41').style.display='none';
+						document.getElementById('text1.42').style.display='none';
+						document.getElementById('text1.43').style.display='none';
+						document.getElementById('text1.44').style.display='none';
+						document.getElementById('text1.45').style.display='';
+				} else {
+						document.getElementById('text1.41').style.display='none';
+						document.getElementById('text1.42').style.display='none';
+						document.getElementById('text1.43').style.display='none';
+						document.getElementById('text1.44').style.display='none';
+						document.getElementById('text1.45').style.display='none';		
+					
+				}
+			} 
+		</script>";
+		
+		echo "<select name=\"drawing_number_3\"  id=\"text1.3\" disabled=\"disabled\" onChange = \"hideClass(this);\">";
+		
+		$sql_tier2 = "SELECT class_num, class_name FROM intranet_drawings_standards_class WHERE class_tier = 2 ORDER BY class_order";
+		$result_tier2 = mysql_query($sql_tier2, $conn) or die(mysql_error());
+		while ($array_tier2 = mysql_fetch_array($result_tier2)) {
+		
+			echo "<option value=\"" . $array_tier2['class_num'] . "\">" . $array_tier2['class_num'] . " (" . str_replace ("\n", " - ", $array_tier2['class_name']) . ")</option>";
+			
+		}
+		echo "</select>";
+		
+		echo "-";
+		
+		$sql_tier0 = "SELECT standard_num, standard_desc, standard_paper, standard_scale, standard_orient, standard_class FROM intranet_drawings_standards_all ORDER BY standard_num";
+		$result_tier0 = mysql_query($sql_tier0, $conn) or die(mysql_error());
+	
+	
+	
+		echo "
+		<script>
+        function changeDrawing(t) {
+            var otionValue = t.value;
+            if (otionValue == \"\") {
+              document.getElementById('drawing_title').innerHTML = \"\";
+            } ";
+			
+		while ($array_tier0 = mysql_fetch_array($result_tier0)) {
+		
+			echo "
+				
+				else if (otionValue == \"" . $array_tier0['standard_class'] . "-" . $array_tier0['standard_num'] . "\") {
+					document.getElementById('drawing_title').innerHTML = \"" . str_replace ("|", "\\n", $array_tier0['standard_desc']) . "\"
+					document.getElementById('drawing_scale').value = " . $array_tier0['standard_scale'] . "
+					document.getElementById('drawing_orientation').value = \"" . $array_tier0['standard_orient'] . "\"
+					document.getElementById('drawing_paper').value = " . $array_tier0['standard_paper'] . ";
+				}
+				";
+				
+			}
+			
+		echo "
+        }; 
+		</script>
+		";
+		
+		
+		$sql_tier3 = "SELECT standard_num, standard_desc, standard_class FROM intranet_drawings_standards_all ORDER BY standard_class,standard_num";
+		$result_tier3 = mysql_query($sql_tier3, $conn) or die(mysql_error());
+		unset($standard_class);
+		$counter = 1;
+							
+					while ($array_tier3 = mysql_fetch_array($result_tier3)) {
+						if ($standard_class != $array_tier3['standard_class'] && $standard_class != NULL) { echo "</select>"; }
+						if ($standard_class != $array_tier3['standard_class']) { echo "<select name=\"drawing_number_4\" id=\"text1.4$counter\" disabled=\"disabled\"  onChange = \"changeDrawing(this);\" style=\"display: none\">"; $standard_class = $array_tier3['standard_class']; $counter++; }
+						echo "<option value=\"" . $array_tier3['standard_class']."-".$array_tier3['standard_num'] . "\">" . $array_tier3['standard_num'] . " (" . str_replace ("|", " - ", $array_tier3['standard_desc']) . ")</option>";
+						
+					}
+					echo "</select>";		
+					
+					
+					
+					
 		
 		echo "<script type=\"text/javascript\"> 
 			function disablefield(){ 
@@ -112,21 +187,27 @@ if ($_GET[drawing_id] == NULL) {
 						document.getElementById('text1.1').disabled='disabled';
 						document.getElementById('text1.2').disabled='disabled';
 						document.getElementById('text1.3').disabled='disabled';
-						document.getElementById('text1.4').disabled='disabled';
+						document.getElementById('text1.41').disabled='disabled';
+						document.getElementById('text1.42').disabled='disabled';
+						document.getElementById('text1.43').disabled='disabled';
 						document.getElementById('text3').disabled='disabled';
 						document.getElementById('text2').disabled='';
 				} else if (document.getElementById('radio_standard').checked == 1){ 
 						document.getElementById('text1.1').disabled='disabled';
 						document.getElementById('text1.2').disabled='disabled';
 						document.getElementById('text1.3').disabled='disabled';
-						document.getElementById('text1.4').disabled='disabled';
+						document.getElementById('text1.41').disabled='disabled';
+						document.getElementById('text1.42').disabled='disabled';
+						document.getElementById('text1.43').disabled='disabled';
 						document.getElementById('text2').disabled='disabled';
 						document.getElementById('text3').disabled='';
 				} else {
 						document.getElementById('text1.1').disabled='';
 						document.getElementById('text1.2').disabled='';
 						document.getElementById('text1.3').disabled='';
-						document.getElementById('text1.4').disabled='';
+						document.getElementById('text1.41').disabled='';
+						document.getElementById('text1.42').disabled='';
+						document.getElementById('text1.43').disabled='';
 						document.getElementById('text2').disabled='disabled';
 						document.getElementById('text3').disabled='disabled'; 
 				} 
@@ -180,7 +261,7 @@ print "</p>";
 
 print "<p>";
 print "Drawing Title<br />";
-print "<textarea name=\"drawing_title\" rows=\"4\" cols=\"42\" required=\"required\">$drawing_title</textarea>";
+print "<textarea name=\"drawing_title\" id=\"drawing_title\" rows=\"4\" cols=\"42\" required=\"required\">$drawing_title</textarea>";
 print "</p>";
 
 print "<p>";
@@ -204,7 +285,7 @@ print "</p>";
 
 print "<p>";
 print "Drawing Orientation<br />";
-print "<input type=\"radio\" name=\"drawing_orientation\" value=\"l\"";
+print "<input type=\"radio\" name=\"drawing_orientation\" id=\"drawing_orientation\" value=\"l\"";
 	if ($drawing_orientation == "l" OR $drawing_orientation != "p") { print " checked "; }
 print " />&nbsp;Landscape<br />";
 print "<input type=\"radio\" name=\"drawing_orientation\" value=\"p\"";
